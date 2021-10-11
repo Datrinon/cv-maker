@@ -1,9 +1,16 @@
 import '../styles/App.css';
 
+function App() {
+  return (
+    <div>
+    </div>
+  );
+}
+
 /**
  * Mimics the state the app will maintain.
  */
-const DUMMY_STATE = {
+ const DUMMY_STATE = {
   resume: {
     personal : {
       firstName: "Phil",
@@ -70,11 +77,6 @@ const DUMMY_STATE = {
   }
 }
 
-function App() {
-  return (
-    <div>
-    </div>
-  );
-}
-
 export default App;
+
+
