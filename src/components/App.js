@@ -1,28 +1,25 @@
 import '../styles/App.css';
-
-function App() {
-  return (
-    <div>
-    </div>
-  );
-}
+import { Component } from 'react';
+import ProgressBar from "./ProgressBar";
+import FormSection from "./FormSection";
+import Navigation from "./Navigation";
 
 /**
  * Mimics the state the app will maintain.
  */
- const DUMMY_STATE = {
+ const DUMMY_RESUME = {
   resume: {
-    personal : {
-      firstName: "Phil",
+    personal: {
+      firstName: "Gerrick",
       lastName: "Haley",
       address: "252 Autumn Place",
       city: "Maple",
       state: "Washington",
       zip: "83554",
-      email: "phil.haley@gmail.com",
+      email: "gerry.haley@gmail.com",
       phone: "9501432123"
     },
-    education : [
+    education: [
       {
         name: "University of California, Davis",
         city: "Davis, CA",
@@ -40,7 +37,7 @@ function App() {
         gpa: 3.6
       },
     ],
-    experience : [
+    experience: [
       {
         position: "Chemist Manager",
         company: "Hill Farms, Inc.",
@@ -68,7 +65,7 @@ function App() {
         ]
       }
     ],
-    skills : [
+    skills: [
       "Plant genetics and gene regulation",
       "PCR, DNA and RNA extraction",
       "RT-qPCR"
@@ -76,6 +73,31 @@ function App() {
 
   }
 }
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {resume: DUMMY_RESUME}
+  }
+
+  render() {
+    return (
+      <div>
+        <header>
+          <h1 className="logo">Resume Creator.</h1>
+        </header>
+        <section>
+          <ProgressBar />
+          <FormSection />
+          <Navigation />
+        </section>
+      </div>
+    );
+  }
+}
+
+
 
 export default App;
 
