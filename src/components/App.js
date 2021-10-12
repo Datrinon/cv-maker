@@ -13,7 +13,7 @@ import _ from "lodash";
  const DUMMY_STATE = {
   resume: {
     personal: {
-      firstName: "Gerrick",
+      firstName: "Gerry",
       lastName: "Haley",
       address: "252 Autumn Place",
       city: "Maple",
@@ -28,12 +28,10 @@ import _ from "lodash";
         degree: "M.S.",
         gpa: 3.5,
         name: "University of California, Davis",
-        city: "Davis, CA",
         graduateDate: "06/2021",
       },
       {
         name: "University of California, Davis",
-        city: "Davis, CA",
         degree: "B.S.",
         subject: "Biochemical Engineering",
         graduateDate: "06/2019",
@@ -90,8 +88,11 @@ class App extends Component {
     this.setState((state) => {
       let field = event.target.name;
       let value = event.target.value;
-      let resume = _.cloneDeep(state.resume);
       
+      console.log({field, value});
+
+      let resume = _.cloneDeep(state.resume);
+
       resume[section][field] = value;
       console.log(resume);
 
