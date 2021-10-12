@@ -11,6 +11,11 @@ import { Component } from "react";
   return word;
 }
 
+/**
+ * Convert a word into a camel-cased word.
+ * @param {string} word 
+ * @returns 
+ */
 const toCamelCase = (word) => {
   if (!word.includes(" ")) {
     return word.toLowerCase();
@@ -56,12 +61,31 @@ const Input = ({forValue, labelText, type, onChange, value, ...others}) => {
 
   return (
     <label htmlFor={forValue}>
-      {labelText}
+      <span>{labelText}</span>
       <input id={forValue} name={nameValue} type={type}
       onChange={onChange} value={value} required={true} {...others}/>
     </label>
   );
 }
+
+const inputToElement = (array, props) => {
+  return array.map((elem, index) => {
+    let input = <Input
+      key = {index}
+      forValue={elem.label}
+      labelText={elem.label}
+      type={elem.type}
+      onChange={props.onChange}
+      value={props["data"][toCamelCase(elem.label)]}
+      {...elem.other}
+    />;
+
+    return input;
+  })
+
+
+}
+
 
 /**
  * For sections which do not have repeating components, e.g. a 
@@ -78,19 +102,7 @@ const PersonalSection = (props) => {
     {label: "Phone", type: "text"}
   ];
 
-  const inputElements = inputs.map((elem, index) => {
-    let input = <Input
-        key = {index}
-        forValue={elem.label}
-        labelText={elem.label}
-        type={elem.type}
-        onChange={props.onChange}
-        value={props["data"][toCamelCase(elem.label)]}
-        {...elem.other}
-      />;
-
-    return input;
-  })
+  const inputElements = inputToElement(inputs, props);
 
   return (
     <div className="personal-section">
