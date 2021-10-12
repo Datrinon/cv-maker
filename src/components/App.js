@@ -1,7 +1,7 @@
 import '../styles/App.css';
 import { Component } from 'react';
 import ProgressBar from "./ProgressBar";
-import FormSection from "./FormSection";
+import Form from "./Form";
 import Navigation from "./Navigation";
 
 /**
@@ -21,12 +21,12 @@ import Navigation from "./Navigation";
     },
     education: [
       {
+        subject: "Biological and Systems Engineering",
+        degree: "M.S.",
+        gpa: 3.5,
         name: "University of California, Davis",
         city: "Davis, CA",
-        degree: "M.S.",
-        subject: "Biological and Systems Engineering",
         graduateDate: "06/2021",
-        gpa: 3.5
       },
       {
         name: "University of California, Davis",
@@ -87,9 +87,9 @@ class App extends Component {
         <header>
           <h1 className="logo">Resume Creator.</h1>
         </header>
-        <section>
+        <section className="app-section">
           <ProgressBar />
-          <FormSection />
+          <Form />
           <Navigation />
         </section>
       </div>

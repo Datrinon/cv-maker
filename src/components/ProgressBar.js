@@ -3,7 +3,7 @@ import { Component } from "react";
 class ProgressBar extends Component{
   render() {
     return (
-    <div></div>
+    <div className="progress-bar"></div>
     );
   }
 }
