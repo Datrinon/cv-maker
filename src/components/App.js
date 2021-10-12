@@ -4,10 +4,13 @@ import ProgressBar from "./ProgressBar";
 import Form from "./Form";
 import Navigation from "./Navigation";
 
+import _ from "lodash";
+
+
 /**
  * Mimics the state the app will maintain.
  */
- const DUMMY_RESUME = {
+ const DUMMY_STATE = {
   resume: {
     personal: {
       firstName: "Gerrick",
@@ -78,7 +81,26 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {resume: DUMMY_RESUME}
+    this.state = DUMMY_STATE;
+
+    this.resumeOnChange = this.resumeOnChange.bind(this);
+  }
+
+  resumeOnChange(section, event) {
+    this.setState((state) => {
+      let field = event.target.name;
+      let value = event.target.value;
+      let resume = _.cloneDeep(state.resume);
+      
+      resume[section][field] = value;
+      console.log(resume);
+
+      return {resume: resume};
+    });
+  }
+
+  componentDidUpdate() {
+    console.log(this.state.resume.personal);
   }
 
   render() {
@@ -89,7 +111,7 @@ class App extends Component {
         </header>
         <section className="app-section">
           <ProgressBar />
-          <Form />
+          <Form resume={this.state.resume} onChange={this.resumeOnChange}/>
           <Navigation />
         </section>
       </div>

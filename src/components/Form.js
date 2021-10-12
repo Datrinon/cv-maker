@@ -14,7 +14,7 @@ const FormSectionHeader = (props) => {
  * @param {string} type - The type of the element.
  * @returns 
  */
-const Input = ({forValue, labelText, type}) => {
+const Input = ({forValue, labelText, type, onChange, value}) => {
   let hyphenRegex = /-(.)/g;
   let nameValue = forValue.replaceAll(hyphenRegex, (match, c1) => {
     return c1.toUpperCase();
@@ -23,7 +23,7 @@ const Input = ({forValue, labelText, type}) => {
   return (
     <label htmlFor={forValue}>
       {labelText}
-      <input id={forValue} name={nameValue} type={type} />
+      <input id={forValue} name={nameValue} type={type} onChange={onChange} value={value} />
     </label>
   );
 }
@@ -31,32 +31,24 @@ const Input = ({forValue, labelText, type}) => {
 /**
  * For sections which do not have repeating components, e.g. a 
  */
-const PersonalSection = () => {
+const PersonalSection = (props) => {
   return (
     <div className="personal-section">
       <FormSectionHeader title="1. Personal Section"/>
-      <Input forValue="first-name" labelText="First Name" type="text" />
+      <Input forValue="first-name" labelText="First Name"
+          type="text" onChange={props.onChange} value={props.data.firstName} />
     </div>
   )
 }
 
-class ResumeForm extends Component {
-  render() {
-    return (
-      <form className="form">
-        <PersonalSection />
-      </form>
-    );
-  }
-}
-
-
 class Form extends Component{
   render() {
     return (
-    <section className="resume-maker">
-      <ResumeForm />
-    </section>
+      <form className="form">
+        <PersonalSection
+          data={this.props.resume.personal}
+          onChange={this.props.onChange.bind(null, "personal")}/>
+      </form>
     );
   }
 }
