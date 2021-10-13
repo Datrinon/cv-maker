@@ -91,6 +91,7 @@ class App extends Component {
     this.resumeOnChange = this.resumeOnChange.bind(this);
     this.resumeMultiSectionOnChange = this.resumeMultiSectionOnChange.bind(this);
     this.resumeOnSubsectionAdd = this.resumeOnSubsectionAdd.bind(this);
+    this.resumeOnSubsectionRemove = this.resumeOnSubsectionRemove.bind(this);
   }
 
   resumeOnChange(section, event) {
@@ -138,7 +139,23 @@ class App extends Component {
       }
 
       return {resume: resume};
-    })
+    });
+  }
+
+  resumeOnSubsectionRemove(section, index) {
+    this.setState((state) => {
+      let resume = _.cloneDeep(state.resume);
+      switch(section) {
+        case "education":
+          resume.education.splice(index, 1);
+          break;
+        default:
+          console.log("Not implemented yet.");
+          break;
+      }
+
+      return {resume: resume};
+    });
   }
 
   // for debug purposes
@@ -155,9 +172,10 @@ class App extends Component {
         <section className="app-section">
           <ProgressBar />
           <Form resume={this.state.resume}
-          onChange={this.resumeOnChange}
-          onMultiChange={this.resumeMultiSectionOnChange}
-          onSubsectionAdd={this.resumeOnSubsectionAdd}
+            onChange={this.resumeOnChange}
+            onMultiChange={this.resumeMultiSectionOnChange}
+            onSubsectionAdd={this.resumeOnSubsectionAdd}
+            onSubsectionRemove={this.resumeOnSubsectionRemove}
           />
           <Navigation />
         </section>

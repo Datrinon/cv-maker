@@ -139,13 +139,23 @@ const inputsToElementsMultiple = (array, props) => {
       return input;
       });
 
+    let RemoveButton = () => {
+      if (props.data.length <= 1) { return null; }
+      return (
+        <button 
+        onClick={props.onSubsectionRemove.bind(null, props.section, index)}>
+          Remove
+        </button>
+      );
+    }
+
     let key = "section" + index;
     let subsection = (
       <div key={key} className={key}>
         <div className="inputs">
-        {inputElements}
+          {inputElements}
         </div>
-        <button> Remove </button>
+        <RemoveButton />
       </div>
     );
 
@@ -216,6 +226,7 @@ class Form extends Component{
           section={"education"}
           onChange={this.props.onMultiChange.bind(null, "education")}
           onSubsectionAdd={this.props.onSubsectionAdd}
+          onSubsectionRemove={this.props.onSubsectionRemove}
         />
       </form>
     );
