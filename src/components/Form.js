@@ -1,4 +1,7 @@
 import { Component } from "react";
+import _ from "lodash";
+import Utility from "../Util/utility";
+
 
 /**
  * Convert a camel-cased word into a spaced word.
@@ -71,7 +74,7 @@ const Input = ({forValue, labelText, type, onChange, value, ...others}) => {
 const inputToElement = (array, props) => {
   return array.map((elem, index) => {
     let input = <Input
-      key = {index}
+      key = {elem.label.replace(" ", "") + index}
       forValue={elem.label}
       labelText={elem.label}
       type={elem.type}
@@ -82,8 +85,6 @@ const inputToElement = (array, props) => {
 
     return input;
   })
-
-
 }
 
 
@@ -91,7 +92,7 @@ const inputToElement = (array, props) => {
  * For sections which do not have repeating components, e.g. a 
  */
 const PersonalSection = (props) => {
-  let inputs = [
+  const inputs = [
     {label: "First Name", type: "text", other: {placeholder:"Danny"}},
     {label: "Last Name", type: "text"},
     {label: "Address", type: "text"},
@@ -106,11 +107,100 @@ const PersonalSection = (props) => {
 
   return (
     <div className="personal-section">
-      <FormSectionHeader title="1. Personal Section"/>
+      <FormSectionHeader title="1. Personal Information"/>
       {inputElements}
     </div>
   )
 }
+
+
+/**
+ * Convert inputs to elements; meant for sections where there are multiple 
+ * details allowed (e.g. Education, Skills). In such instances, the array
+ * is 2-dimensional.
+ */
+const inputsToElementsMultiple = (array, props) => {
+  let wrapper;
+  let elements = [];
+
+  array.forEach((inputSection, index) => {
+    let inputElements = inputSection.map((elem, inputIndex) => {
+      let key = elem.label.replace(" ", "") + index.toString() + inputIndex.toString()
+      let input = <Input
+        key={key}
+        forValue={elem.label}
+        labelText={elem.label}
+        type={elem.type}
+        onChange={props.onChange.bind(null, index)}
+        value={props["data"][index][toCamelCase(elem.label)]}
+        {...elem.other}
+      />;
+
+      return input;
+      });
+
+    let key = "section" + index;
+    let subsection = (
+      <div key={key} className={key}>
+        <div className="inputs">
+        {inputElements}
+        </div>
+        <button> Remove </button>
+      </div>
+    );
+
+    elements.push(subsection);
+  });
+
+  wrapper = (
+    <div className="subsections">
+      {elements}
+    </div>
+  )
+
+  return wrapper;
+}
+
+const EducationSection = (props) => {
+  let inputs = [];
+  let template = [
+    {label: "Major", type: "text"},
+    {label: "Degree", type: "text"},
+    {label: "GPA", type: "text"},
+    {label: "School", type: "text"},
+    {label: "Location", type:"text"},
+    {label: "To", type:"text"},
+    {label: "From", type:"text"}
+  ];
+
+  // clone input element for the number of states in there.
+  for (let i = 0; i < props.data.length; i++) {
+    inputs.push(_.cloneDeep(template));
+  }
+  
+  let inputElements = inputsToElementsMultiple(inputs, props);
+
+  let addElement = async (ev) => {
+    inputs.push(_.cloneDeep(template));
+    // insert callback to push a new object here.
+    await props.onSubsectionAdd(props.section)
+    // turns out we didn't even need to update inputElements... it automatically rerenders.
+  }
+
+  let AddButton = () => (
+    <button type="button" onClick={addElement}>Add</button>
+  );
+
+
+  return (    
+    <div className="education-section">
+      <FormSectionHeader title="2. Education"/>
+      {inputElements}
+      <AddButton />
+    </div>
+  )
+}
+
 
 class Form extends Component{
   render() {
@@ -118,7 +208,15 @@ class Form extends Component{
       <form className="form">
         <PersonalSection
           data={this.props.resume.personal}
-          onChange={this.props.onChange.bind(null, "personal")}/>
+          section={"personal"}
+          onChange={this.props.onChange.bind(null, "personal")}
+        />
+        <EducationSection
+          data={this.props.resume.education}
+          section={"education"}
+          onChange={this.props.onMultiChange.bind(null, "education")}
+          onSubsectionAdd={this.props.onSubsectionAdd}
+        />
       </form>
     );
   }

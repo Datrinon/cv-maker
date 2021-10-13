@@ -4,6 +4,9 @@ import ProgressBar from "./ProgressBar";
 import Form from "./Form";
 import Navigation from "./Navigation";
 
+import Education from '../models/education';
+
+
 import _ from "lodash";
 
 
@@ -24,18 +27,22 @@ import _ from "lodash";
     },
     education: [
       {
-        subject: "Biological and Systems Engineering",
+        school: "University of California, Davis",
+        location: "Davis, CA",
+        major: "Biological Systems Engineering",
         degree: "M.S.",
         gpa: 3.5,
-        name: "University of California, Davis",
-        graduateDate: "06/2021",
+        to: "06/2021",
+        from: "09/2019"
       },
       {
-        name: "University of California, Davis",
+        school: "University of California, Davis",
+        location: "Davis, CA",
+        major: "Biochemical Engineering",
         degree: "B.S.",
-        subject: "Biochemical Engineering",
-        graduateDate: "06/2019",
-        gpa: 3.6
+        gpa: 3.6,
+        to: "06/2019",
+        from: "09/2015"
       },
     ],
     experience: [
@@ -82,6 +89,8 @@ class App extends Component {
     this.state = DUMMY_STATE;
 
     this.resumeOnChange = this.resumeOnChange.bind(this);
+    this.resumeMultiSectionOnChange = this.resumeMultiSectionOnChange.bind(this);
+    this.resumeOnSubsectionAdd = this.resumeOnSubsectionAdd.bind(this);
   }
 
   resumeOnChange(section, event) {
@@ -100,8 +109,41 @@ class App extends Component {
     });
   }
 
+  resumeMultiSectionOnChange(section, index, event) {
+    this.setState((state) => {
+      let field = event.target.name;
+      let value = event.target.value;
+      
+      console.log({field, value});
+
+      let resume = _.cloneDeep(state.resume);
+
+      resume[section][index][field] = value;
+      console.log(resume);
+
+      return {resume: resume};
+    });
+  }
+
+  resumeOnSubsectionAdd(section) {
+    this.setState((state) => {
+      let resume = _.cloneDeep(state.resume);
+      switch(section) {
+        case "education":
+          resume.education.push(new Education());
+          break;
+        default:
+          console.log("Not implemented yet.")
+          break;
+      }
+
+      return {resume: resume};
+    })
+  }
+
+  // for debug purposes
   componentDidUpdate() {
-    console.log(this.state.resume.personal);
+    console.log(this.state.resume.education);
   }
 
   render() {
@@ -112,7 +154,11 @@ class App extends Component {
         </header>
         <section className="app-section">
           <ProgressBar />
-          <Form resume={this.state.resume} onChange={this.resumeOnChange}/>
+          <Form resume={this.state.resume}
+          onChange={this.resumeOnChange}
+          onMultiChange={this.resumeMultiSectionOnChange}
+          onSubsectionAdd={this.resumeOnSubsectionAdd}
+          />
           <Navigation />
         </section>
       </div>

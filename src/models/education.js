@@ -1,18 +1,21 @@
 class Education {
 
-  name;
-  city;
+  school;
+  location;
   degree;
-  subject;
-  graduateDate;
+  major;
+  to;
   gpa;
 
-  constructor(name, city, degree, subject, graduateDate, gpa) {
-    this.name = name;
-    this.city = city;
-    this.degree = degree;
-    this.subject = subject;
-    this.graduateDate = graduateDate;
-    this.gpa = gpa;
+  constructor(school, location, major, degree, gpa, to, from) {
+    this.school = school ?? "";
+    this.location = location ?? "";
+    this.major = major ?? "";
+    this.degree = degree ?? "";
+    this.gpa = gpa ?? "";
+    this.to = to ?? "";
+    this.from = from ?? "";
   }
 }
+
+export default Education;
