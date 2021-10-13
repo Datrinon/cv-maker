@@ -44,7 +44,7 @@ const FormSectionHeader = (props) => {
 
 /**
  * Returns an input element with a label. Accepts a prop, which contains the following
- * props.
+ * props:
  * @param {string} forValue - Value for attribute 'for', provide as a camelCase.
  * @param {string} labelText - The label for the input.
  * @param {string} type - The type of the element.
@@ -54,7 +54,7 @@ const FormSectionHeader = (props) => {
  * @param {{atrributeName : value}} others - 
  * Any other attribute to give to the element. Provide this as an object. e.g.
  * {minlength: 0}.
- * @returns 
+ * @returns {JSXElement}
  */
 const Input = ({forValue, labelText, type, onChange, value, ...others}) => {
 
@@ -70,6 +70,47 @@ const Input = ({forValue, labelText, type, onChange, value, ...others}) => {
     </label>
   );
 }
+
+/**
+ * Returns an input list-like element with a label. Suited for attributes that 
+ * have array-like values. It accepts a prop, which contains the following
+ * props:
+ * @param {string} forValue - Value for attribute 'for', provide as a camelCase.
+ * @param {string} labelText - The label for the input.
+ * @param {string} onChange - handler to sync the value with the state.
+ * @param {[]} values - The value for the element to start off with.
+ * @param {boolean} required - Is input for the element required? True by default.
+ * @param {{atrributeName : value}} others - 
+ * Any other attribute to give to the element. Provide this as an object. e.g.
+ * {minlength: 0}.
+ * @returns {JSXElement}
+ */
+const ListInput = ({forValue, labelText, onChange, values, ...others}) => {
+
+  forValue = toHyphenCase(labelText);
+
+  // in this case, value is an array.
+  let bullets = values.map((value, index) => {
+    return (<input
+      key={labelText + index}
+      name={toCamelCase(labelText)}
+      type={"text"}
+      value={value}
+      onChange={onChange.bind(null, index)}
+      required={false} 
+      {...others}
+      />
+    );
+  });
+
+  return (
+    <label htmlFor={forValue}>
+      <span>{labelText}</span>
+      {bullets}
+  </label>
+  );
+}
+
 
 const inputToElement = (array, props) => {
   return array.map((elem, index) => {
@@ -100,15 +141,27 @@ const inputToElement = (array, props) => {
   array.forEach((inputSection, index) => {
     let inputElements = inputSection.map((elem, inputIndex) => {
       let key = elem.label.replace(" ", "") + index.toString() + inputIndex.toString()
-      let input = <Input
-        key={key}
-        forValue={elem.label}
-        labelText={elem.label}
-        type={elem.type}
-        onChange={props.onChange.bind(null, index)}
-        value={props["data"][index][toCamelCase(elem.label)]}
-        {...elem.other}
-      />;
+      let input;
+      if (elem.type === "list") {
+        input = <ListInput
+          key={key}
+          forValue={elem.label}
+          labelText={elem.label}
+          onChange={props.onSubsectionListChange.bind(null, index)}
+          values={props["data"][index][toCamelCase(elem.label)]}
+          {...elem.other}
+         />
+      } else {
+        input = <Input
+          key={key}
+          forValue={elem.label}
+          labelText={elem.label}
+          type={elem.type}
+          onChange={props.onChange.bind(null, index)}
+          value={props["data"][index][toCamelCase(elem.label)]}
+          {...elem.other}
+        />;
+      }
 
       return input;
       });
@@ -258,6 +311,10 @@ class Form extends Component{
           onChange={this.props.onMultiChange.bind(null, "experience")}
           onSubsectionAdd={this.props.onSubsectionAdd}
           onSubsectionRemove={this.props.onSubsectionRemove}
+          onSubsectionListChange={this
+            .props
+            .onMultiListChange
+            .bind(null, this.experienceSection.title)}
         />
         
       </form>

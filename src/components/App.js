@@ -52,7 +52,7 @@ import _ from "lodash";
         location: "Sausalito, CA",
         from: "06/2021",
         to: null,
-        description: [
+        responsibilities: [
           "Perform experiments to develop, validate, verify, and troubleshoot analytical methods such as methods based on HPLC and other analytical instruments.",
           "Provide technical oversight of analytical development activities",
           "Perform and oversee all analysis for optimum performance of all plating applications"
@@ -64,7 +64,7 @@ import _ from "lodash";
         location: "Davis, CA",
         from: "11/2020",
         to: "06/2021",
-        description: [
+        responsibilities: [
           "Identify and characterize the mechanisms, genes, QTL, molecular markers, and traits underlying salt stress tolerance in lettuce.",
           "Conduct QTL mapping and study the fatty acids/gene expression",
           "Collaborate with regents to incorporate beneficial traits into lettuce cultivars"
@@ -90,6 +90,8 @@ class App extends Component {
     this.resumeMultiSectionOnChange = this.resumeMultiSectionOnChange.bind(this);
     this.resumeOnSubsectionAdd = this.resumeOnSubsectionAdd.bind(this);
     this.resumeOnSubsectionRemove = this.resumeOnSubsectionRemove.bind(this);
+    this.resumeMultiSectionListOnChange = this.resumeMultiSectionListOnChange
+                                          .bind(this);
   }
 
   resumeOnChange(section, event) {
@@ -113,12 +115,25 @@ class App extends Component {
       let field = event.target.name;
       let value = event.target.value;
       
-      console.log({field, value});
-
       let resume = _.cloneDeep(state.resume);
 
       resume[section][index][field] = value;
       console.log(resume);
+
+      return {resume: resume};
+    });
+  }
+
+  resumeMultiSectionListOnChange(section, subsectionIndex, bulletIndex, event) {
+    this.setState((state) => {
+      let field = event.target.name;
+      let value = event.target.value;
+      console.log({section, subsectionIndex, bulletIndex, field, value});
+
+      
+      let resume = _.cloneDeep(state.resume);
+
+      resume[section][subsectionIndex][field][bulletIndex] = value;
 
       return {resume: resume};
     });
@@ -172,6 +187,7 @@ class App extends Component {
           <Form resume={this.state.resume}
             onChange={this.resumeOnChange}
             onMultiChange={this.resumeMultiSectionOnChange}
+            onMultiListChange={this.resumeMultiSectionListOnChange}
             onSubsectionAdd={this.resumeOnSubsectionAdd}
             onSubsectionRemove={this.resumeOnSubsectionRemove}
           />
