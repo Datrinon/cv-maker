@@ -7,6 +7,7 @@ import Navigation from "./Navigation";
 // models
 import Education from '../models/education';
 import Experience from '../models/experience';
+import Skills from '../models/skills';
 
 
 import _ from "lodash";
@@ -74,9 +75,23 @@ import _ from "lodash";
       }
     ],
     skills: [
-      "Plant genetics and gene regulation",
-      "PCR, DNA and RNA extraction",
-      "RT-qPCR"
+      {
+        category: "Biological Systems",
+        skills: [
+          "Plant genetics and gene regulation",
+          "PCR, DNA and RNA extraction",
+          "RT-qPCR"
+        ]
+      },
+      {
+        category: "Languages & Frameworks",
+        skills: [
+          "R",
+          "Matlab",
+          "Python"
+        ]
+      },
+
     ]
 
   }
@@ -180,6 +195,9 @@ class App extends Component {
         case "experience":
           resume.experience.push(new Experience());
           break;
+        case "skills":
+          resume.skills.push(new Skills());
+          break;
         default:
           console.log("Not implemented yet.")
           break;
@@ -198,6 +216,9 @@ class App extends Component {
           break;
         case "experience":
           resume.experience.splice(index, 1);
+          break;
+        case "skills":
+          resume.skills.splice(index, 1);
           break;
         default:
           console.log("Not implemented yet.");

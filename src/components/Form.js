@@ -206,7 +206,7 @@ const inputToElement = (array, props) => {
 
 
 /**
- * For sections which do not have repeating components, e.g. a 
+ * The personal section of the resume.
  */
 const PersonalSection = (props) => {
   const inputs = [
@@ -230,7 +230,12 @@ const PersonalSection = (props) => {
   )
 }
 
-
+/**
+ * Generic wrapper for a section with has repeatable subsections. Like skills,
+ * education, or experience.
+ * @param {*} props 
+ * @returns 
+ */
 function SectionWithSubsections (props) {
   // template
   // section title
@@ -292,6 +297,14 @@ class Form extends Component{
         {label: "Responsibilities", type:"list"}
       ]
     }
+
+    this.skillsSection = {
+      title: "skills",
+      template: [
+        {label: "Category", type:"text"},
+        {label: "Skills", type:"list"}
+      ]
+    }
   }
 
   render() {
@@ -314,7 +327,10 @@ class Form extends Component{
           section={this.experienceSection.title}
           template={this.experienceSection.template}
           data={this.props.resume.experience}
-          onChange={this.props.onMultiChange.bind(null, "experience")}
+          onChange={this
+            .props
+            .onMultiChange
+            .bind(null,this.experienceSection.title)}
           onSubsectionAdd={this.props.onSubsectionAdd}
           onSubsectionRemove={this.props.onSubsectionRemove}
           onSubsectionListChange={this
@@ -329,6 +345,29 @@ class Form extends Component{
             .props
             .onMultiListRemove
             .bind(null, this.experienceSection.title)}
+        />
+        <SectionWithSubsections
+          section={this.skillsSection.title}
+          template={this.skillsSection.template}
+          data={this.props.resume.skills}
+          onChange={this
+            .props
+            .onMultiChange
+            .bind(null,this.skillsSection.title)}
+          onSubsectionAdd={this.props.onSubsectionAdd}
+          onSubsectionRemove={this.props.onSubsectionRemove}
+          onSubsectionListChange={this
+            .props
+            .onMultiListChange
+            .bind(null, this.skillsSection.title)}
+          onSubsectionListAdd={this
+            .props
+            .onMultiListAdd
+            .bind(null, this.skillsSection.title)}
+          onSubsectionListRemove={this
+            .props
+            .onMultiListRemove
+            .bind(null, this.skillsSection.title)}
         />
         
       </form>
