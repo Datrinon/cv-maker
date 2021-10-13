@@ -89,37 +89,11 @@ const inputToElement = (array, props) => {
 
 
 /**
- * For sections which do not have repeating components, e.g. a 
- */
-const PersonalSection = (props) => {
-  const inputs = [
-    {label: "First Name", type: "text", other: {placeholder:"Danny"}},
-    {label: "Last Name", type: "text"},
-    {label: "Address", type: "text"},
-    {label: "City", type: "text"},
-    {label: "State", type: "text"},
-    {label: "ZIP", type: "text"},
-    {label: "Email", type: "email"},
-    {label: "Phone", type: "text"}
-  ];
-
-  const inputElements = inputToElement(inputs, props);
-
-  return (
-    <div className="personal-section">
-      <FormSectionHeader title="1. Personal Information"/>
-      {inputElements}
-    </div>
-  )
-}
-
-
-/**
  * Convert inputs to elements; meant for sections where there are multiple 
  * details allowed (e.g. Education, Skills). In such instances, the array
  * is 2-dimensional.
  */
-const inputsToElementsMultiple = (array, props) => {
+ const inputsToElementSubsection = (array, props) => {
   let wrapper;
   let elements = [];
 
@@ -171,6 +145,33 @@ const inputsToElementsMultiple = (array, props) => {
   return wrapper;
 }
 
+
+/**
+ * For sections which do not have repeating components, e.g. a 
+ */
+const PersonalSection = (props) => {
+  const inputs = [
+    {label: "First Name", type: "text", other: {placeholder:"Danny"}},
+    {label: "Last Name", type: "text"},
+    {label: "Address", type: "text"},
+    {label: "City", type: "text"},
+    {label: "State", type: "text"},
+    {label: "ZIP", type: "text"},
+    {label: "Email", type: "email"},
+    {label: "Phone", type: "text"}
+  ];
+
+  const inputElements = inputToElement(inputs, props);
+
+  return (
+    <div className="personal-section">
+      <FormSectionHeader title="1. Personal Information"/>
+      {inputElements}
+    </div>
+  )
+}
+
+
 const EducationSection = (props) => {
   let inputs = [];
   let template = [
@@ -188,17 +189,17 @@ const EducationSection = (props) => {
     inputs.push(_.cloneDeep(template));
   }
   
-  let inputElements = inputsToElementsMultiple(inputs, props);
+  let inputElements = inputsToElementSubsection(inputs, props);
 
-  let addElement = async (ev) => {
+  let addSubsection = async (ev) => {
     inputs.push(_.cloneDeep(template));
     // insert callback to push a new object here.
     await props.onSubsectionAdd(props.section)
     // turns out we didn't even need to update inputElements... it automatically rerenders.
   }
 
-  let AddButton = () => (
-    <button type="button" onClick={addElement}>Add</button>
+  let AddSubsectionButton = () => (
+    <button type="button" onClick={addSubsection}>Add</button>
   );
 
 
@@ -206,13 +207,74 @@ const EducationSection = (props) => {
     <div className="education-section">
       <FormSectionHeader title="2. Education"/>
       {inputElements}
-      <AddButton />
+      <AddSubsectionButton />
     </div>
   )
 }
 
+function SectionWithSubsections (props) {
+  // template
+  // section title
+  let inputs = [];
+
+  // clone input element for the number of states in there.
+  for (let i = 0; i < props.data.length; i++) {
+    inputs.push(_.cloneDeep(props.template));
+  }
+
+  let inputElements = inputsToElementSubsection(inputs, props);
+
+  let addSubsection = async (ev) => {
+    inputs.push(_.cloneDeep(props.template));
+    // insert callback to push a new object here.
+    await props.onSubsectionAdd(props.section)
+    // turns out we didn't even need to update inputElements... it automatically rerenders.
+  }
+
+  let AddSubsectionButton = () => (
+    <button type="button" onClick={addSubsection}>Add</button>
+  );
+
+  return (
+    <div className={props.section+"-section"} >
+      <FormSectionHeader title={props.section}/>
+      {inputElements}
+      <AddSubsectionButton />
+    </div>
+  );
+}
 
 class Form extends Component{
+
+  constructor(props) {
+    super(props);
+
+    this.educationSection = {
+      title: "education",
+      template: [
+        {label: "Major", type: "text"},
+        {label: "Degree", type: "text"},
+        {label: "GPA", type: "text"},
+        {label: "School", type: "text"},
+        {label: "Location", type:"text"},
+        {label: "To", type:"text"},
+        {label: "From", type:"text"}
+      ]
+    }
+
+    this.experienceSection = {
+      title: "experience",
+      template: [
+        {label: "Position", type: "text"},
+        {label: "Company", type: "text"},
+        {label: "Location", type: "text"},
+        {label: "To", type:"text"},
+        {label: "From", type:"text"},
+        {label: "Responsibilities", type:"list"}
+      ]
+    }
+  }
+
   render() {
     return (
       <form className="form">
@@ -221,13 +283,23 @@ class Form extends Component{
           section={"personal"}
           onChange={this.props.onChange.bind(null, "personal")}
         />
-        <EducationSection
+        <SectionWithSubsections
+          section={this.educationSection.title}
+          template={this.educationSection.template}
           data={this.props.resume.education}
-          section={"education"}
           onChange={this.props.onMultiChange.bind(null, "education")}
           onSubsectionAdd={this.props.onSubsectionAdd}
           onSubsectionRemove={this.props.onSubsectionRemove}
         />
+        <SectionWithSubsections
+          section={this.experienceSection.title}
+          template={this.experienceSection.template}
+          data={this.props.resume.experience}
+          onChange={this.props.onMultiChange.bind(null, "experience")}
+          onSubsectionAdd={this.props.onSubsectionAdd}
+          onSubsectionRemove={this.props.onSubsectionRemove}
+        />
+        
       </form>
     );
   }

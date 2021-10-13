@@ -49,8 +49,7 @@ import _ from "lodash";
       {
         position: "Chemist Manager",
         company: "Hill Farms, Inc.",
-        city: "Sausalito",
-        state: "CA",
+        location: "Sausalito, CA",
         from: "06/2021",
         to: null,
         description: [
@@ -62,8 +61,7 @@ import _ from "lodash";
       {
         position: "Research Associate",
         company: "University of California",
-        city: "Davis",
-        state: "CA",
+        location: "Davis, CA",
         from: "11/2020",
         to: "06/2021",
         description: [
