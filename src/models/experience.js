@@ -1,20 +1,21 @@
 class Experience {
   position;
   company;
-  city;
+  location;
   state;
   from;
   to;
-  responsibilties;
+  responsibilities;
 
-  constructor(position, company, city, state, from, to = null, responsibilties) {
+  constructor(position, company, location, state, from, to = "", responsibilities) {
     this.position = position ?? "";
     this.company = company ?? "";
-    this.city = city ?? "";
-    this.state = state ?? "";
+    this.location = location ?? "";
     this.from = from ?? "";
     this.to = to ?? "";  
-    this.responsibilties = responsibilties ?? "";
+    this.responsibilities = responsibilities ?? [""];
   }
 
 }
+
+export default Experience;

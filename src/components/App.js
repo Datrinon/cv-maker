@@ -53,7 +53,7 @@ import _ from "lodash";
         company: "Hill Farms, Inc.",
         location: "Sausalito, CA",
         from: "06/2021",
-        to: null,
+        to: "",
         responsibilities: [
           "Perform experiments to develop, validate, verify, and troubleshoot analytical methods such as methods based on HPLC and other analytical instruments.",
           "Provide technical oversight of analytical development activities",
@@ -177,6 +177,9 @@ class App extends Component {
         case "education":
           resume.education.push(new Education());
           break;
+        case "experience":
+          resume.experience.push(new Experience());
+          break;
         default:
           console.log("Not implemented yet.")
           break;
@@ -192,6 +195,9 @@ class App extends Component {
       switch(section) {
         case "education":
           resume.education.splice(index, 1);
+          break;
+        case "experience":
+          resume.experience.splice(index, 1);
           break;
         default:
           console.log("Not implemented yet.");
