@@ -3,6 +3,7 @@ import { Component } from 'react';
 // components
 import ProgressBar from "./ProgressBar";
 import Form from "./Form";
+import PreviewPane from "./PreviewPane";
 import Navigation from "./Navigation";
 // models
 import Education from '../models/education';
@@ -251,6 +252,7 @@ class App extends Component {
             onSubsectionAdd={this.resumeOnSubsectionAdd}
             onSubsectionRemove={this.resumeOnSubsectionRemove}
           />
+          <PreviewPane resume={this.state.resume}/>
           <Navigation />
         </section>
       </div>

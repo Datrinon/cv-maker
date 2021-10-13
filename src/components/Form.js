@@ -224,7 +224,7 @@ const PersonalSection = (props) => {
 
   return (
     <div className="personal-section">
-      <FormSectionHeader title="1. Personal Information"/>
+      <FormSectionHeader title="Personal Information"/>
       {inputElements}
     </div>
   )
