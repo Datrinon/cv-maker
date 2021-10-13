@@ -172,46 +172,6 @@ const PersonalSection = (props) => {
 }
 
 
-const EducationSection = (props) => {
-  let inputs = [];
-  let template = [
-    {label: "Major", type: "text"},
-    {label: "Degree", type: "text"},
-    {label: "GPA", type: "text"},
-    {label: "School", type: "text"},
-    {label: "Location", type:"text"},
-    {label: "To", type:"text"},
-    {label: "From", type:"text"}
-  ];
-
-  // clone input element for the number of states in there.
-  for (let i = 0; i < props.data.length; i++) {
-    inputs.push(_.cloneDeep(template));
-  }
-  
-  let inputElements = inputsToElementSubsection(inputs, props);
-
-  let addSubsection = async (ev) => {
-    inputs.push(_.cloneDeep(template));
-    // insert callback to push a new object here.
-    await props.onSubsectionAdd(props.section)
-    // turns out we didn't even need to update inputElements... it automatically rerenders.
-  }
-
-  let AddSubsectionButton = () => (
-    <button type="button" onClick={addSubsection}>Add</button>
-  );
-
-
-  return (    
-    <div className="education-section">
-      <FormSectionHeader title="2. Education"/>
-      {inputElements}
-      <AddSubsectionButton />
-    </div>
-  )
-}
-
 function SectionWithSubsections (props) {
   // template
   // section title
