@@ -1,10 +1,12 @@
 import '../styles/App.css';
 import { Component } from 'react';
+// components
 import ProgressBar from "./ProgressBar";
 import Form from "./Form";
 import Navigation from "./Navigation";
-
+// models
 import Education from '../models/education';
+import Experience from '../models/experience';
 
 
 import _ from "lodash";
@@ -91,7 +93,12 @@ class App extends Component {
     this.resumeOnSubsectionAdd = this.resumeOnSubsectionAdd.bind(this);
     this.resumeOnSubsectionRemove = this.resumeOnSubsectionRemove.bind(this);
     this.resumeMultiSectionListOnChange = this.resumeMultiSectionListOnChange
-                                          .bind(this);
+        .bind(this);
+    this.resumeMultiSectionListOnAdd = this.resumeMultiSectionListOnAdd
+        .bind(this);
+    this.resumeMultiSectionListOnRemove = this.resumeMultiSectionListOnRemove
+        .bind(this);
+                                        
   }
 
   resumeOnChange(section, event) {
@@ -139,6 +146,30 @@ class App extends Component {
     });
   }
 
+  resumeMultiSectionListOnAdd(section, subsectionIndex, event) {
+    this.setState((state) => {
+      let field = event.target.dataset.field;
+      
+      let resume = _.cloneDeep(state.resume);
+
+      resume[section][subsectionIndex][field].push("");
+
+      return {resume: resume};
+    });
+  }
+
+  resumeMultiSectionListOnRemove(section, subsectionIndex, event) {
+    this.setState((state) => {
+      let field = event.target.dataset.field;
+      
+      let resume = _.cloneDeep(state.resume);
+
+      resume[section][subsectionIndex][field].pop();
+
+      return {resume: resume};
+    });
+  }
+
   resumeOnSubsectionAdd(section) {
     this.setState((state) => {
       let resume = _.cloneDeep(state.resume);
@@ -173,7 +204,7 @@ class App extends Component {
 
   // for debug purposes
   componentDidUpdate() {
-    console.log(this.state.resume.education);
+    console.log(this.state.resume.experience);
   }
 
   render() {
@@ -188,6 +219,8 @@ class App extends Component {
             onChange={this.resumeOnChange}
             onMultiChange={this.resumeMultiSectionOnChange}
             onMultiListChange={this.resumeMultiSectionListOnChange}
+            onMultiListAdd={this.resumeMultiSectionListOnAdd}
+            onMultiListRemove={this.resumeMultiSectionListOnRemove}
             onSubsectionAdd={this.resumeOnSubsectionAdd}
             onSubsectionRemove={this.resumeOnSubsectionRemove}
           />

@@ -85,7 +85,7 @@ const Input = ({forValue, labelText, type, onChange, value, ...others}) => {
  * {minlength: 0}.
  * @returns {JSXElement}
  */
-const ListInput = ({forValue, labelText, onChange, values, ...others}) => {
+const ListInput = ({forValue, labelText, onChange, onAdd, onRemove, values, ...others}) => {
 
   forValue = toHyphenCase(labelText);
 
@@ -104,10 +104,14 @@ const ListInput = ({forValue, labelText, onChange, values, ...others}) => {
   });
 
   return (
-    <label htmlFor={forValue}>
-      <span>{labelText}</span>
-      {bullets}
-  </label>
+    <div>
+      <label htmlFor={forValue}>
+        <span>{labelText}</span>
+        {bullets}
+      </label>
+      <button data-field={toCamelCase(labelText)} type="button" onClick={onAdd}>+</button>
+      <button data-field={toCamelCase(labelText)} type="button" onClick={onRemove}>-</button>
+    </div>
   );
 }
 
@@ -148,6 +152,8 @@ const inputToElement = (array, props) => {
           forValue={elem.label}
           labelText={elem.label}
           onChange={props.onSubsectionListChange.bind(null, index)}
+          onAdd={props.onSubsectionListAdd.bind(null, index)}
+          onRemove={props.onSubsectionListRemove.bind(null, index)}
           values={props["data"][index][toCamelCase(elem.label)]}
           {...elem.other}
          />
@@ -314,6 +320,14 @@ class Form extends Component{
           onSubsectionListChange={this
             .props
             .onMultiListChange
+            .bind(null, this.experienceSection.title)}
+          onSubsectionListAdd={this
+            .props
+            .onMultiListAdd
+            .bind(null, this.experienceSection.title)}
+          onSubsectionListRemove={this
+            .props
+            .onMultiListRemove
             .bind(null, this.experienceSection.title)}
         />
         
