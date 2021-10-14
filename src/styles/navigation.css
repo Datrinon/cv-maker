@@ -1,0 +1,27 @@
+.navigation {
+  align-self:end;
+}
+
+.buttons {
+  text-align: center;
+}
+
+.navigation button {
+  width: 35%;
+  margin: 0 10px;
+}
+
+button {
+  font-family: inherit;
+  background-color: white;
+  padding: 2px 15px;
+  border-radius: 4px;
+  font-size: 105%;
+  transition: background-color 300ms;
+  cursor: pointer;
+  
+}
+
+button:hover {
+  background-color: rgb(208, 208, 208);
+}

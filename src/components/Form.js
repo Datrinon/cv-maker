@@ -1,9 +1,7 @@
 import { Component } from "react";
 import _ from "lodash";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-
 import "../styles/print.css";
+import "../styles/form.css";
 
 /**
  * Convert a camel-cased word into a spaced word.
@@ -65,9 +63,10 @@ const Input = ({ forValue, labelText, type, onChange, onFocus, value, ...others 
   let nameValue = toCamelCase(labelText);
 
   return (
-    <label htmlFor={forValue}>
-      <span>{labelText}</span>
-      <input id={forValue} name={nameValue} type={type} onFocus={onFocus}
+    <label className="label" htmlFor={forValue}>
+      <span className="label-display">{labelText}</span>
+      <input className="input"
+      id={forValue} name={nameValue} type={type} onFocus={onFocus}
         onChange={onChange} value={value} required={true} {...others} />
     </label>
   );
@@ -94,6 +93,7 @@ const ListInput = ({ forValue, labelText, onFocus, onChange, onAdd, onRemove, va
   // in this case, value is an array.
   let bullets = values.map((value, index) => {
     return (<input
+      className="input-list"
       key={labelText + index}
       name={toCamelCase(labelText)}
       type={"text"}
@@ -108,8 +108,8 @@ const ListInput = ({ forValue, labelText, onFocus, onChange, onAdd, onRemove, va
 
   return (
     <div>
-      <label htmlFor={forValue}>
-        <span>{labelText}</span>
+      <label className="label-list" htmlFor={forValue}>
+        <span className="label-display">{labelText}</span>
         {bullets}
       </label>
       <button data-field={toCamelCase(labelText)} type="button" onClick={onAdd}>+</button>

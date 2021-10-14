@@ -1,0 +1,26 @@
+.personal-section {
+  padding: 15px;
+}
+
+.section-title {
+  text-align: center;
+}
+
+.form .label, .form .input{
+  display: block;
+  width: 95%;
+}
+
+.input {
+  border: none;
+  border-bottom: 1px solid black;
+}
+
+.form .label {
+  margin: 15px;
+}
+
+.form .label .label-display {
+  font-variant: all-petite-caps;
+  font-size: 115%;
+}

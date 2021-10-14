@@ -1,5 +1,7 @@
 import { Component } from "react";
 
+import "../styles/navigation.css";
+
 
 class Navigation extends Component{
   buttons;
@@ -17,7 +19,7 @@ class Navigation extends Component{
       case "mid":
         this.buttons = (
           <div className="buttons">
-            <button onClick={this.props.clickPrev}>Previous</button>
+            <button onClick={this.props.clickPrev}>Prev</button>
             <button onClick={this.props.clickNext}>Next</button>
           </div>
         )
@@ -25,7 +27,7 @@ class Navigation extends Component{
       case "end":
         this.buttons = (
           <div className="buttons">
-            <button onClick={this.props.clickPrev}>Previous</button>
+            <button onClick={this.props.clickPrev}>Prev</button>
             <button onClick={this.props.clickNext}>Finish</button>
           </div>
         )
