@@ -11,7 +11,7 @@ import Experience from '../models/experience';
 import Skills from '../models/skills';
 
 
-import _ from "lodash";
+import _, { indexOf } from "lodash";
 
 
 /**
@@ -96,7 +96,8 @@ import _ from "lodash";
     ]
   },
   get sections() { return Object.keys(this.resume); },
-  activeSection: null
+  activeSection: null,
+  progress: null
 }
 
 class App extends Component {
@@ -232,12 +233,28 @@ class App extends Component {
   }
 
   setActiveSection(section) {
-    this.setState({activeSection: section});
+    this.setState((state) =>{
+      let current;
+      let pos = state.sections.indexOf(section);
+      if (pos === 0) {
+        current = {progress: "start"}
+      } else if (pos === state.sections.length-1) {
+        current = {progress: "end"}
+      } else {
+        current = {progress: "mid"}
+      }
+
+      let updates = Object.assign({}, current, {activeSection: section});
+
+
+      return updates;
+    });    
   }
 
   // for debug purposes
   componentDidUpdate() {
     console.log(this.state.activeSection);
+    console.log(this.state.progress);
   }
 
   render() {
