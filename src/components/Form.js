@@ -1,13 +1,15 @@
 import { Component } from "react";
 import _ from "lodash";
-import Utility from "../Util/utility";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
+import "../styles/print.css";
 
 /**
  * Convert a camel-cased word into a spaced word.
  * @param {string} word 
  */
- const toHyphenCase = (word) => {
+const toHyphenCase = (word) => {
   word = word.toLowerCase();
   word = word.replace(" ", "-");
 
@@ -23,9 +25,9 @@ const toCamelCase = (word) => {
   if (!word.includes(" ")) {
     return word.toLowerCase();
   }
-  
+
   let hyphenRegex = /(-|\s)(.)/g;
-  
+
   word = word.replaceAll(hyphenRegex, (match, c1, c2) => {
     return c2.toUpperCase();
   })
@@ -56,7 +58,7 @@ const FormSectionHeader = (props) => {
  * {minlength: 0}.
  * @returns {JSXElement}
  */
-const Input = ({forValue, labelText, type, onChange, onFocus, value, ...others}) => {
+const Input = ({ forValue, labelText, type, onChange, onFocus, value, ...others }) => {
 
   forValue = toHyphenCase(labelText);
 
@@ -66,7 +68,7 @@ const Input = ({forValue, labelText, type, onChange, onFocus, value, ...others})
     <label htmlFor={forValue}>
       <span>{labelText}</span>
       <input id={forValue} name={nameValue} type={type} onFocus={onFocus}
-      onChange={onChange} value={value} required={true} {...others}/>
+        onChange={onChange} value={value} required={true} {...others} />
     </label>
   );
 }
@@ -85,7 +87,7 @@ const Input = ({forValue, labelText, type, onChange, onFocus, value, ...others})
  * {minlength: 0}.
  * @returns {JSXElement}
  */
-const ListInput = ({forValue, labelText, onFocus, onChange, onAdd, onRemove, values, ...others}) => {
+const ListInput = ({ forValue, labelText, onFocus, onChange, onAdd, onRemove, values, ...others }) => {
 
   forValue = toHyphenCase(labelText);
 
@@ -98,9 +100,9 @@ const ListInput = ({forValue, labelText, onFocus, onChange, onAdd, onRemove, val
       value={value}
       onFocus={onFocus}
       onChange={onChange.bind(null, index)}
-      required={false} 
+      required={false}
       {...others}
-      />
+    />
     );
   });
 
@@ -120,7 +122,7 @@ const ListInput = ({forValue, labelText, onFocus, onChange, onAdd, onRemove, val
 const inputToElement = (array, props) => {
   return array.map((elem, index) => {
     let input = <Input
-      key = {elem.label.replace(" ", "") + index}
+      key={elem.label.replace(" ", "") + index}
       forValue={elem.label}
       labelText={elem.label}
       type={elem.type}
@@ -140,7 +142,7 @@ const inputToElement = (array, props) => {
  * details allowed (e.g. Education, Skills). In such instances, the array
  * is 2-dimensional.
  */
- const inputsToElementSubsection = (array, props) => {
+const inputsToElementSubsection = (array, props) => {
   let wrapper;
   let elements = [];
 
@@ -159,7 +161,7 @@ const inputToElement = (array, props) => {
           onRemove={props.onSubsectionListRemove.bind(null, index)}
           values={props["data"][index][toCamelCase(elem.label)]}
           {...elem.other}
-         />
+        />
       } else {
         input = <Input
           key={key}
@@ -174,14 +176,14 @@ const inputToElement = (array, props) => {
       }
 
       return input;
-      });
+    });
 
     let RemoveButton = () => {
       if (props.data.length <= 1) { return null; }
       return (
-        <button 
-        type="button"
-        onClick={props.onSubsectionRemove.bind(null, props.section, index)}>
+        <button
+          type="button"
+          onClick={props.onSubsectionRemove.bind(null, props.section, index)}>
           Remove
         </button>
       );
@@ -219,21 +221,21 @@ const PersonalSection = (props) => {
   }
 
   const inputs = [
-    {label: "First Name", type: "text", other: {placeholder:"Danny"}},
-    {label: "Last Name", type: "text"},
-    {label: "Address", type: "text"},
-    {label: "City", type: "text"},
-    {label: "State", type: "text"},
-    {label: "ZIP", type: "text"},
-    {label: "Email", type: "email"},
-    {label: "Phone", type: "text"}
+    { label: "First Name", type: "text", other: { placeholder: "Danny" } },
+    { label: "Last Name", type: "text" },
+    { label: "Address", type: "text" },
+    { label: "City", type: "text" },
+    { label: "State", type: "text" },
+    { label: "ZIP", type: "text" },
+    { label: "Email", type: "email" },
+    { label: "Phone", type: "text" }
   ];
 
   const inputElements = inputToElement(inputs, props);
 
   return (
     <div className="personal-section">
-      <FormSectionHeader title="Personal Information"/>
+      <FormSectionHeader title="Personal Information" />
       {inputElements}
     </div>
   )
@@ -245,7 +247,7 @@ const PersonalSection = (props) => {
  * @param {*} props 
  * @returns 
  */
-function SectionWithSubsections (props) {
+function SectionWithSubsections(props) {
   if (props.activeSection !== props.section) {
     return null;
   }
@@ -272,8 +274,8 @@ function SectionWithSubsections (props) {
   );
 
   return (
-    <div className={props.section+"-section"} >
-      <FormSectionHeader title={props.section}/>
+    <div className={props.section + "-section"} >
+      <FormSectionHeader title={props.section} />
       {inputElements}
       <AddSubsectionButton />
     </div>
@@ -281,20 +283,24 @@ function SectionWithSubsections (props) {
 }
 
 function FinishSection(props) {
-  console.log({props});
+  console.log({ props });
   if (props.activeSection !== props.section) {
     return null;
   }
 
-  return(
+  return (
     <div>
-      <button>Save to PDF</button>
-      <button>Reset</button>    
+      <button type="button" onClick={getPDF}>Save to PDF</button>
+      <button>Reset</button>
     </div>
   )
 }
 
-class Form extends Component{
+function getPDF() {
+  window.print();
+}
+
+class Form extends Component {
 
   constructor(props) {
     super(props);
@@ -302,33 +308,33 @@ class Form extends Component{
     this.educationSection = {
       title: "education",
       template: [
-        {label: "Major", type: "text"},
-        {label: "Degree", type: "text"},
-        {label: "GPA", type: "text"},
-        {label: "School", type: "text"},
-        {label: "Location", type:"text"},
-        {label: "To", type:"text"},
-        {label: "From", type:"text"}
+        { label: "Major", type: "text" },
+        { label: "Degree", type: "text" },
+        { label: "GPA", type: "text" },
+        { label: "School", type: "text" },
+        { label: "Location", type: "text" },
+        { label: "To", type: "text" },
+        { label: "From", type: "text" }
       ]
     }
 
     this.experienceSection = {
       title: "experience",
       template: [
-        {label: "Position", type: "text"},
-        {label: "Company", type: "text"},
-        {label: "Location", type: "text"},
-        {label: "To", type:"text"},
-        {label: "From", type:"text"},
-        {label: "Responsibilities", type:"list"}
+        { label: "Position", type: "text" },
+        { label: "Company", type: "text" },
+        { label: "Location", type: "text" },
+        { label: "To", type: "text" },
+        { label: "From", type: "text" },
+        { label: "Responsibilities", type: "list" }
       ]
     }
 
     this.skillsSection = {
       title: "skills",
       template: [
-        {label: "Category", type:"text"},
-        {label: "Skills", type:"list"}
+        { label: "Category", type: "text" },
+        { label: "Skills", type: "list" }
       ]
     }
   }
@@ -369,7 +375,7 @@ class Form extends Component{
           onChange={this
             .props
             .onMultiChange
-            .bind(null,this.experienceSection.title)}
+            .bind(null, this.experienceSection.title)}
           onSubsectionAdd={this.props.onSubsectionAdd}
           onSubsectionRemove={this.props.onSubsectionRemove}
           onSubsectionListChange={this
@@ -397,7 +403,7 @@ class Form extends Component{
           onChange={this
             .props
             .onMultiChange
-            .bind(null,this.skillsSection.title)}
+            .bind(null, this.skillsSection.title)}
           onSubsectionAdd={this.props.onSubsectionAdd}
           onSubsectionRemove={this.props.onSubsectionRemove}
           onSubsectionListChange={this

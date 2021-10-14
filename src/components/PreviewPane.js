@@ -13,7 +13,7 @@ class PreviewPane extends Component {
     return (
     <section className="preview">
       <h1 className="preview-title">Preview</h1>
-      <article className="resume">
+      <article id="section-to-print" className="resume">
         <section className="personal">
           <h1>{personal.firstName + " " + personal.lastName}</h1>
           <div className="address">

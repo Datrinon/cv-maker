@@ -6,3 +6,7 @@
 .section.active {
   border: 1px solid black;
 }
+
+.preview {
+  color: red
+}
