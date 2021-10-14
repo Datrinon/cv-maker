@@ -56,7 +56,7 @@ const FormSectionHeader = (props) => {
  * {minlength: 0}.
  * @returns {JSXElement}
  */
-const Input = ({forValue, labelText, type, onChange, value, ...others}) => {
+const Input = ({forValue, labelText, type, onChange, onFocus, value, ...others}) => {
 
   forValue = toHyphenCase(labelText);
 
@@ -65,7 +65,7 @@ const Input = ({forValue, labelText, type, onChange, value, ...others}) => {
   return (
     <label htmlFor={forValue}>
       <span>{labelText}</span>
-      <input id={forValue} name={nameValue} type={type}
+      <input id={forValue} name={nameValue} type={type} onFocus={onFocus}
       onChange={onChange} value={value} required={true} {...others}/>
     </label>
   );
@@ -85,7 +85,7 @@ const Input = ({forValue, labelText, type, onChange, value, ...others}) => {
  * {minlength: 0}.
  * @returns {JSXElement}
  */
-const ListInput = ({forValue, labelText, onChange, onAdd, onRemove, values, ...others}) => {
+const ListInput = ({forValue, labelText, onFocus, onChange, onAdd, onRemove, values, ...others}) => {
 
   forValue = toHyphenCase(labelText);
 
@@ -96,6 +96,7 @@ const ListInput = ({forValue, labelText, onChange, onAdd, onRemove, values, ...o
       name={toCamelCase(labelText)}
       type={"text"}
       value={value}
+      onFocus={onFocus}
       onChange={onChange.bind(null, index)}
       required={false} 
       {...others}
@@ -124,6 +125,7 @@ const inputToElement = (array, props) => {
       labelText={elem.label}
       type={elem.type}
       onChange={props.onChange}
+      onFocus={props.onFocus}
       value={props["data"][toCamelCase(elem.label)]}
       {...elem.other}
     />;
@@ -151,6 +153,7 @@ const inputToElement = (array, props) => {
           key={key}
           forValue={elem.label}
           labelText={elem.label}
+          onFocus={props.onFocus}
           onChange={props.onSubsectionListChange.bind(null, index)}
           onAdd={props.onSubsectionListAdd.bind(null, index)}
           onRemove={props.onSubsectionListRemove.bind(null, index)}
@@ -164,6 +167,7 @@ const inputToElement = (array, props) => {
           labelText={elem.label}
           type={elem.type}
           onChange={props.onChange.bind(null, index)}
+          onFocus={props.onFocus}
           value={props["data"][index][toCamelCase(elem.label)]}
           {...elem.other}
         />;
@@ -176,6 +180,7 @@ const inputToElement = (array, props) => {
       if (props.data.length <= 1) { return null; }
       return (
         <button 
+        type="button"
         onClick={props.onSubsectionRemove.bind(null, props.section, index)}>
           Remove
         </button>
@@ -307,6 +312,9 @@ class Form extends Component{
     }
   }
 
+  componentDidMount() {
+  }
+
   render() {
     return (
       <form className="form">
@@ -314,14 +322,22 @@ class Form extends Component{
           data={this.props.resume.personal}
           section={"personal"}
           onChange={this.props.onChange.bind(null, "personal")}
+          onFocus={this.props.setActiveSection.bind(null, "personal")}
         />
         <SectionWithSubsections
           section={this.educationSection.title}
           template={this.educationSection.template}
           data={this.props.resume.education}
-          onChange={this.props.onMultiChange.bind(null, "education")}
+          onChange={this
+            .props
+            .onMultiChange
+            .bind(null, this.educationSection.title)}
           onSubsectionAdd={this.props.onSubsectionAdd}
           onSubsectionRemove={this.props.onSubsectionRemove}
+          onFocus={this
+            .props
+            .setActiveSection
+            .bind(null, this.educationSection.title)}
         />
         <SectionWithSubsections
           section={this.experienceSection.title}
@@ -345,6 +361,10 @@ class Form extends Component{
             .props
             .onMultiListRemove
             .bind(null, this.experienceSection.title)}
+          onFocus={this
+            .props
+            .setActiveSection
+            .bind(null, this.experienceSection.title)}
         />
         <SectionWithSubsections
           section={this.skillsSection.title}
@@ -367,6 +387,10 @@ class Form extends Component{
           onSubsectionListRemove={this
             .props
             .onMultiListRemove
+            .bind(null, this.skillsSection.title)}
+          onFocus={this
+            .props
+            .setActiveSection
             .bind(null, this.skillsSection.title)}
         />
         

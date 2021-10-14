@@ -2,3 +2,7 @@
   border: 1px solid black;
   padding: 2px
 }
+
+.section.active {
+  border: 1px solid black;
+}

@@ -30,7 +30,7 @@ class PreviewPane extends Component {
         <section className="education">
           {education.map(degree => {
             return (
-              <div className="degree">
+              <div className="degree" key={JSON.stringify(degree)}>
                 <p>{degree.degree} {degree.major}</p>
                 <p>{degree.school}</p>
                 <p>{degree.location}</p>
@@ -43,12 +43,12 @@ class PreviewPane extends Component {
         <section className="experience">
           {experience.map(job => {
               return (
-                <div className="job">
+                <div className="job" key={JSON.stringify(job)}>
                   <p>{job.position} - {job.company}</p>
                   <p>{job.location}</p>
                   <p>{job.from} - {job.to}</p>
                   <ul>
-                  {job.responsibilities.map(note => <li>{note}</li>)}
+                  {job.responsibilities.map((note, index) => <li key={index}>{note}</li>)}
                   </ul>
                 </div>
               );
@@ -57,10 +57,10 @@ class PreviewPane extends Component {
         <section className="skills">
           {skills.map(skillTree => {
             return (
-              <div className="skill">
+              <div className="skill" key={skillTree.category}>
                 <h2>{skillTree.category}</h2>
                 <ul>
-                  {skillTree.skills.map(skill => <li>{skill}</li>)}
+                  {skillTree.skills.map((skill, index) => <li key={index}>{skill}</li>)}
                 </ul>
               </div>
             );

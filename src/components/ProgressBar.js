@@ -2,8 +2,24 @@ import { Component } from "react";
 
 class ProgressBar extends Component{
   render() {
+    
+    const sections = this.props.sections.map((section, index) => {
+      const isActive =  (this.props.activeSection === section) ? "active" : "";
+      return (
+        <div
+        key={index + "-" + section}
+        className={"section " + isActive}
+        >
+          <span className="index">{index + 1}</span>
+          <p className="name">{section}</p>
+        </div>
+      )
+    });
+
     return (
-    <div className="progress-bar"></div>
+    <div className="progress-bar">
+      {sections}
+    </div>
     );
   }
 }

@@ -94,8 +94,9 @@ import _ from "lodash";
       },
 
     ]
-
-  }
+  },
+  get sections() { return Object.keys(this.resume); },
+  activeSection: null
 }
 
 class App extends Component {
@@ -114,7 +115,7 @@ class App extends Component {
         .bind(this);
     this.resumeMultiSectionListOnRemove = this.resumeMultiSectionListOnRemove
         .bind(this);
-                                        
+    this.setActiveSection = this.setActiveSection.bind(this);                                        
   }
 
   resumeOnChange(section, event) {
@@ -230,9 +231,13 @@ class App extends Component {
     });
   }
 
+  setActiveSection(section) {
+    this.setState({activeSection: section});
+  }
+
   // for debug purposes
   componentDidUpdate() {
-    console.log(this.state.resume.experience);
+    console.log(this.state.activeSection);
   }
 
   render() {
@@ -242,7 +247,7 @@ class App extends Component {
           <h1 className="logo">Resume Creator.</h1>
         </header>
         <section className="app-section">
-          <ProgressBar />
+          <ProgressBar activeSection={this.state.activeSection} sections={this.state.sections} />
           <Form resume={this.state.resume}
             onChange={this.resumeOnChange}
             onMultiChange={this.resumeMultiSectionOnChange}
@@ -251,6 +256,7 @@ class App extends Component {
             onMultiListRemove={this.resumeMultiSectionListOnRemove}
             onSubsectionAdd={this.resumeOnSubsectionAdd}
             onSubsectionRemove={this.resumeOnSubsectionRemove}
+            setActiveSection={this.setActiveSection}
           />
           <PreviewPane resume={this.state.resume}/>
           <Navigation />
