@@ -280,6 +280,20 @@ function SectionWithSubsections (props) {
   );
 }
 
+function FinishSection(props) {
+  console.log({props});
+  if (props.activeSection !== props.section) {
+    return null;
+  }
+
+  return(
+    <div>
+      <button>Save to PDF</button>
+      <button>Reset</button>    
+    </div>
+  )
+}
+
 class Form extends Component{
 
   constructor(props) {
@@ -404,7 +418,10 @@ class Form extends Component{
             .bind(null, this.skillsSection.title)}
           activeSection={this.props.activeSection}
         />
-        
+        <FinishSection
+          activeSection={this.props.activeSection}
+          section={"review"}
+        />
       </form>
     );
   }

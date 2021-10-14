@@ -5,6 +5,7 @@ import ProgressBar from "./ProgressBar";
 import Form from "./Form";
 import PreviewPane from "./PreviewPane";
 import Navigation from "./Navigation";
+import ReviewPane from './Review';
 // models
 import Education from '../models/education';
 import Experience from '../models/experience';
@@ -95,7 +96,11 @@ import _, { indexOf } from "lodash";
 
     ]
   },
-  get sections() { return Object.keys(this.resume); },
+  get sections() { 
+    let sections = Object.keys(this.resume);
+    sections.push("review");
+    return sections;
+  },
   activeSection: "personal",
   progress: "start"
 }
@@ -293,8 +298,10 @@ class App extends Component {
     let current;
     if (pos === 0) {
       current = "start";
-    } else if (pos === sections.length-1) {
+    } else if (pos === sections.length-2) {
       current = "end";
+    } else if (pos === sections.length-1) {
+      current = "review";
     } else {
       current = "mid";
     }

@@ -26,12 +26,14 @@ class Navigation extends Component{
         this.buttons = (
           <div className="buttons">
             <button onClick={this.props.clickPrev}>Previous</button>
-            <button>Finish</button>
+            <button onClick={this.props.clickNext}>Finish</button>
           </div>
         )
         break;
+      case "review":
       default:
-        console.log("Start.");
+        this.buttons = null;
+        console.log("No buttons shown.");
         break;
     }
   }
