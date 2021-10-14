@@ -96,8 +96,8 @@ import _, { indexOf } from "lodash";
     ]
   },
   get sections() { return Object.keys(this.resume); },
-  activeSection: null,
-  progress: null
+  activeSection: "personal",
+  progress: "start"
 }
 
 class App extends Component {
@@ -117,6 +117,50 @@ class App extends Component {
     this.resumeMultiSectionListOnRemove = this.resumeMultiSectionListOnRemove
         .bind(this);
     this.setActiveSection = this.setActiveSection.bind(this);                                        
+  }
+
+  resumePrevSection() {
+    this.setState(state => {
+      let curIndex = state.sections.indexOf(state.activeSection);
+      let activeSection = state.sections[curIndex - 1];
+
+      let progressUpdate = this.determineProgress(curIndex - 1, state.sections);
+
+      return {
+        activeSection: activeSection,
+        progress: progressUpdate
+      }
+
+    });
+  }
+
+  resumeNextSection() {
+    this.setState(state => {
+      let curIndex = state.sections.indexOf(state.activeSection);
+      let activeSection = state.sections[curIndex + 1];
+
+      let progressUpdate = this.determineProgress(curIndex + 1, state.sections);
+      console.log({curIndex, activeSection});
+
+      return {
+        activeSection: activeSection,
+        progress: progressUpdate
+      }
+    });
+  }
+
+  jumpToSection(curIndex) {
+    this.setState(state => {
+      let activeSection = state.sections[curIndex];
+
+      let currentProgress = this.determineProgress(curIndex, state.sections);
+      // edit this shit into a value bruh. its an object rn
+
+      return {
+        activeSection: activeSection,
+        progress: currentProgress
+      }
+    })
   }
 
   resumeOnChange(section, event) {
@@ -233,25 +277,33 @@ class App extends Component {
   }
 
   setActiveSection(section) {
-    this.setState((state) =>{
-      let current;
+    this.setState((state) => {
       let pos = state.sections.indexOf(section);
-      if (pos === 0) {
-        current = {progress: "start"}
-      } else if (pos === state.sections.length-1) {
-        current = {progress: "end"}
-      } else {
-        current = {progress: "mid"}
-      }
 
-      let updates = Object.assign({}, current, {activeSection: section});
+      let currentProgress = this.determineProgress(pos, state.sections);
 
-
-      return updates;
+      return {
+        activeSection: section,
+        currentProgress: currentProgress
+      };
     });    
   }
 
+  determineProgress(pos, sections) {
+    let current;
+    if (pos === 0) {
+      current = "start";
+    } else if (pos === sections.length-1) {
+      current = "end";
+    } else {
+      current = "mid";
+    }
+
+    return current;
+  }
+
   // for debug purposes
+  // TODO, remove this when finished.
   componentDidUpdate() {
     console.log(this.state.activeSection);
     console.log(this.state.progress);
@@ -264,8 +316,13 @@ class App extends Component {
           <h1 className="logo">Resume Creator.</h1>
         </header>
         <section className="app-section">
-          <ProgressBar activeSection={this.state.activeSection} sections={this.state.sections} />
-          <Form resume={this.state.resume}
+          <ProgressBar
+          activeSection={this.state.activeSection}
+          sections={this.state.sections}
+          jumpToSection={this.jumpToSection.bind(this)}
+          />
+          <Form
+            resume={this.state.resume}
             onChange={this.resumeOnChange}
             onMultiChange={this.resumeMultiSectionOnChange}
             onMultiListChange={this.resumeMultiSectionListOnChange}
@@ -274,9 +331,13 @@ class App extends Component {
             onSubsectionAdd={this.resumeOnSubsectionAdd}
             onSubsectionRemove={this.resumeOnSubsectionRemove}
             setActiveSection={this.setActiveSection}
+            activeSection={this.state.activeSection}
+          />
+          <Navigation progress={this.state.progress}
+            clickPrev={this.resumePrevSection.bind(this)}
+            clickNext={this.resumeNextSection.bind(this)}
           />
           <PreviewPane resume={this.state.resume}/>
-          <Navigation />
         </section>
       </div>
     );

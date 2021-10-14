@@ -214,6 +214,10 @@ const inputToElement = (array, props) => {
  * The personal section of the resume.
  */
 const PersonalSection = (props) => {
+  if (props.activeSection !== props.section) {
+    return null;
+  }
+
   const inputs = [
     {label: "First Name", type: "text", other: {placeholder:"Danny"}},
     {label: "Last Name", type: "text"},
@@ -242,6 +246,9 @@ const PersonalSection = (props) => {
  * @returns 
  */
 function SectionWithSubsections (props) {
+  if (props.activeSection !== props.section) {
+    return null;
+  }
   // template
   // section title
   let inputs = [];
@@ -323,6 +330,7 @@ class Form extends Component{
           section={"personal"}
           onChange={this.props.onChange.bind(null, "personal")}
           onFocus={this.props.setActiveSection.bind(null, "personal")}
+          activeSection={this.props.activeSection}
         />
         <SectionWithSubsections
           section={this.educationSection.title}
@@ -338,6 +346,7 @@ class Form extends Component{
             .props
             .setActiveSection
             .bind(null, this.educationSection.title)}
+          activeSection={this.props.activeSection}
         />
         <SectionWithSubsections
           section={this.experienceSection.title}
@@ -365,6 +374,7 @@ class Form extends Component{
             .props
             .setActiveSection
             .bind(null, this.experienceSection.title)}
+          activeSection={this.props.activeSection}
         />
         <SectionWithSubsections
           section={this.skillsSection.title}
@@ -392,6 +402,7 @@ class Form extends Component{
             .props
             .setActiveSection
             .bind(null, this.skillsSection.title)}
+          activeSection={this.props.activeSection}
         />
         
       </form>

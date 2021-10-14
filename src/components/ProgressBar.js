@@ -9,6 +9,7 @@ class ProgressBar extends Component{
         <div
         key={index + "-" + section}
         className={"section " + isActive}
+        onClick={this.props.jumpToSection.bind(null, index)}
         >
           <span className="index">{index + 1}</span>
           <p className="name">{section}</p>
