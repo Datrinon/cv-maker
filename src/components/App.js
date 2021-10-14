@@ -1,11 +1,13 @@
+// css
 import '../styles/App.css';
+// react
 import { Component } from 'react';
 // components
+import Header from "./Header";
 import ProgressBar from "./ProgressBar";
 import Form from "./Form";
 import PreviewPane from "./PreviewPane";
 import Navigation from "./Navigation";
-import ReviewPane from './Review';
 // models
 import Education from '../models/education';
 import Experience from '../models/experience';
@@ -319,9 +321,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <header>
-          <h1 className="logo">Resume Creator.</h1>
-        </header>
+        <Header />
         <section className="app-section">
           <ProgressBar
           activeSection={this.state.activeSection}
