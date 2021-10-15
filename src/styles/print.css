@@ -11,5 +11,12 @@
     top: 0;
     border: none;
     -webkit-print-color-adjust: exact;
+    box-shadow: none;
+    overflow-y: hidden;
+    height: fit-content;
+    height: -moz-fit-content;
+    max-height: initial;
+    width: fit-content;
+    width: -moz-fit-content;
   }
 }
