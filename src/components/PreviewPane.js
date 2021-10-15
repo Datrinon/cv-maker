@@ -26,7 +26,7 @@ class PreviewPane extends Component {
           </div>
         </section>
         <section className="education resume-section">
-          <h1 className="title"><i class="title-icon fas fa-graduation-cap"></i>Education</h1>
+          <h1 className="title"><i className="title-icon fas fa-graduation-cap"></i>Education</h1>
           <div className="contents">
           {education.map(degree => {
             return (
@@ -44,7 +44,7 @@ class PreviewPane extends Component {
           </div>
         </section>
         <section className="experience resume-section">
-          <h1 className="title"><i class="title-icon fas fa-building"></i>Experience</h1>
+          <h1 className="title"><i className="title-icon fas fa-building"></i>Experience</h1>
           <div className="contents">
           {experience.map(job => {
               return (
@@ -65,7 +65,7 @@ class PreviewPane extends Component {
           </div>
         </section>
         <section className="skills resume-section">
-          <h1 className="title"><i class="title-icon fas fa-toolbox"></i>Skills</h1>
+          <h1 className="title"><i className="title-icon fas fa-toolbox"></i>Skills</h1>
           <div className="skills-section">
           {skills.map(skillTree => {
             return (

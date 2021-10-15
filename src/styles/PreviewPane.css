@@ -1,11 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
 
+.preview-title {
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+  margin: 4px 25%;
+  padding-bottom: 5px
+}
+
 .resume {
   font-family:'IBM Plex Sans';
-  border: 1px solid black;
   width: 800px;
   --style-color: rgb(231, 107, 36);
   font-size: 20px;
+  box-shadow: 0px 3px 8px 4px #c7c3c3;
+  height: 80vh;
+  margin: 5px;
+  overflow-y: auto;
+  max-height: 1024px;
+  background-color: white;
 }
 
 /* General begin */

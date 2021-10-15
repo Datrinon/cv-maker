@@ -12,6 +12,7 @@
 
 .form {
   grid-area: form;
+  justify-self: center;
 }
 
 .navigation {
@@ -20,4 +21,6 @@
 
 .preview {
   grid-area: preview;
+  justify-self: center;
+  width: fit-content;
 }

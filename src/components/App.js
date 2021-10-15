@@ -88,7 +88,7 @@ import _, { indexOf } from "lodash";
         ]
       },
       {
-        category: "Languages & Frameworks",
+        category: "Programming Languages",
         skills: [
           "R",
           "Matlab",
