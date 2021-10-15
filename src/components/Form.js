@@ -271,7 +271,7 @@ function SectionWithSubsections(props) {
   }
 
   let AddSubsectionButton = () => (
-    <button type="button" onClick={addSubsection}>Add</button>
+    <button className="add-subsection" type="button" onClick={addSubsection}>Add Subsection</button>
   );
 
   return (
@@ -290,10 +290,10 @@ function FinishSection(props) {
 
   return (
     <div className="review-section section">
-      <h2>Ready to use your resume?</h2>
+      <h2 className="caption">Ready to use your resume?</h2>
       <div className="controls">
-        <button type="button" onClick={getPDF}>Save to PDF</button>
-        <button>Reset</button>
+        <button className="print" type="button" onClick={getPDF}>Save to PDF</button>
+        <button className="reset">Reset</button>
       </div>
     </div>
   )
