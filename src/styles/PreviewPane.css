@@ -1,14 +1,151 @@
-
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
 
 .resume {
+  font-family:'IBM Plex Sans';
   border: 1px solid black;
-  padding: 2px
+  width: 800px;
+  --style-color: rgb(231, 107, 36);
+  font-size: 20px;
 }
 
-.section.active {
-  border: 1px solid black;
+/* General begin */
+.resume-section {
+  margin: 15px;
+  padding: 6px 0 24px 0;
+  display: flex;
+  flex-direction: row;
 }
 
-.preview {
-  color: red
+.resume-section:not(:nth-last-child(1)) {
+  border-bottom: 1px solid var(--style-color);
 }
+
+.resume-section .title {
+  padding: 0 5px;
+  min-width: 128px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.resume-section .contents {
+  width: 100%;
+}
+
+.resume-section .contents .item {
+  margin-bottom: 15px;
+}
+
+.title-icon {
+  color: var(--style-color);
+  min-width: 28px;
+}
+
+.header-title {
+  font-weight: bold;
+}
+
+.contents .item > *:not(.header) {
+  font-size: 90%;
+  margin: 8px 0;
+}
+
+.resume .list .list-item {
+  list-style-type: square;
+  position: relative;
+  left: 15px;
+  margin: 15px;
+  font-size: 95%;
+}
+
+/* General end */
+
+/* Personal Section Begin */
+.personal {
+  padding: 15px;
+  text-align: center;
+  background-color: var(--style-color);
+  color: white;
+}
+
+.fullname {
+  font-size: 60px;
+  font-variant-caps: all-petite-caps;
+  font-weight: 600;
+  letter-spacing: 0.5mm;
+}
+
+.contact-address > * {
+  display: inline-block;
+  margin: 0 8px;
+  font-size: 90%;
+}
+
+.icon {
+  font-size: 12px;
+  margin: 0 5px;
+  display: inline-block;
+}
+
+.address .icon {
+  vertical-align: top;
+  position: relative;
+  top: 2px;
+  left: 1px;
+}
+
+.contact-info > p, .address {
+  margin: 8px 0;
+}
+
+.address-text {
+  display: inline-block;
+}
+
+/* Personal Section End */
+
+/* Education Resume Begin */
+
+
+.contents .item .header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.school-name {
+  font-weight: 500;
+}
+
+.degree-gpa {
+  font-weight: 600;
+}
+
+/* Education Resume End */
+
+/* Skills Section Begin */
+.skill-category {
+  font-weight: bold;
+}
+
+.skill {
+  margin-right: 10px;
+}
+
+.skills {
+  position: relative;
+  left: 1px;
+}
+
+.skill-item {
+  list-style-type: square;
+  font-size: 90%;
+  margin: 10px 25px;
+}
+
+.skills-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Skills Section End */

@@ -107,13 +107,13 @@ const ListInput = ({ forValue, labelText, onFocus, onChange, onAdd, onRemove, va
   });
 
   return (
-    <div>
+    <div className="input-list-container">
       <label className="label-list" htmlFor={forValue}>
         <span className="label-display">{labelText}</span>
         {bullets}
       </label>
-      <button data-field={toCamelCase(labelText)} type="button" onClick={onAdd}>+</button>
-      <button data-field={toCamelCase(labelText)} type="button" onClick={onRemove}>-</button>
+      <button data-field={toCamelCase(labelText)} type="button" onClick={onAdd}>Add +</button>
+      <button data-field={toCamelCase(labelText)} type="button" onClick={onRemove}>Remove -</button>
     </div>
   );
 }
@@ -182,9 +182,10 @@ const inputsToElementSubsection = (array, props) => {
       if (props.data.length <= 1) { return null; }
       return (
         <button
+          className="remove-subsection"
           type="button"
           onClick={props.onSubsectionRemove.bind(null, props.section, index)}>
-          Remove
+          Remove Subsection
         </button>
       );
     }
@@ -234,7 +235,7 @@ const PersonalSection = (props) => {
   const inputElements = inputToElement(inputs, props);
 
   return (
-    <div className="personal-section">
+    <div className="form-section personal-section">
       <FormSectionHeader title="Personal Information" />
       {inputElements}
     </div>
@@ -274,7 +275,7 @@ function SectionWithSubsections(props) {
   );
 
   return (
-    <div className={props.section + "-section"} >
+    <div className={props.section + "-section" + " form-section"} >
       <FormSectionHeader title={props.section} />
       {inputElements}
       <AddSubsectionButton />
@@ -283,15 +284,17 @@ function SectionWithSubsections(props) {
 }
 
 function FinishSection(props) {
-  console.log({ props });
   if (props.activeSection !== props.section) {
     return null;
   }
 
   return (
-    <div>
-      <button type="button" onClick={getPDF}>Save to PDF</button>
-      <button>Reset</button>
+    <div className="review-section section">
+      <h2>Ready to use your resume?</h2>
+      <div className="controls">
+        <button type="button" onClick={getPDF}>Save to PDF</button>
+        <button>Reset</button>
+      </div>
     </div>
   )
 }

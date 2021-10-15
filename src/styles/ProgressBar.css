@@ -4,6 +4,10 @@
   justify-content: space-evenly;
 }
 
+.section.active {
+  border: 1px solid black;
+}
+
 .section {
   padding: 5px;
   font-size: 0.95em;
