@@ -9,6 +9,8 @@
 .navigation button {
   width: 35%;
   margin: 0 10px;
+  border: 1px solid transparent;
+  box-shadow: 0px 1px 2px 1px #b0a1a1;
 }
 
 
@@ -25,5 +27,5 @@ button {
 }
 
 button:hover {
-  background-color: rgb(208, 208, 208);
+  background-color: rgb(208, 188, 145);
 }

@@ -2,23 +2,55 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  width: 80vw;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.section.active {
-  border: 1px solid black;
+.progress-bar .section.active {
+  opacity: 1.0;
+  transition: border 300ms;
 }
 
-.section {
+.progress-bar .section.active::after {
+  content: "";
+  border-bottom: 1px solid black;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  animation: deploy 300ms ease-out;
+}
+
+@keyframes deploy {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1.0);
+  }
+}
+
+.progress-bar .section {
   padding: 5px;
   font-size: 0.95em;
   width: 100px;
+  opacity: 0.5;
+  position: relative;
+  cursor: pointer;
+  transition: text-shadow 0.3s;
+}
+
+.progress-bar .section:hover {
+  text-shadow: 0px 2px 9px #292703;
 }
 
 .index {
   display: block;
   text-align: center;
-  border: 1px solid black;
-  width: 1.25em;
+  border: 1px dotted rgb(128, 128, 128);
+  width: 16px;
+  height: 16px;
   padding: 2px;
   border-radius: 50%;
   margin: 0 auto;

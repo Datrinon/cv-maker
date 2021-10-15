@@ -9,3 +9,8 @@ header.header {
   margin-left: 25px;
   font-size: 200%;
 }
+
+.author {
+  margin-left: 15px;
+  font-size: 1rem;
+}

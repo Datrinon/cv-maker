@@ -6,6 +6,17 @@
   "navigation preview";
 }
 
+@media (max-width: 768px) {
+  .app-section {
+    grid-template-areas:
+    "progress"
+    "form "
+    "navigation"
+    "preview";
+  }
+}
+
+
 .progress-bar {
   grid-area: progress;
 }
