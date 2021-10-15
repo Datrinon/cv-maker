@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope&display=swap');
+
 
 body {
   margin: 0;
-  font-family: "Source Code Pro";
+  font-family: "Manrope";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(253, 247, 234)
 }
 
 input {
@@ -16,4 +19,12 @@ input {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.footer {
+  background-color: black;
+  color: white;
+  padding: 5px 0;
+  text-align: center;
+  margin-top: 15px;
 }
