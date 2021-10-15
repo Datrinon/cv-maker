@@ -3,28 +3,28 @@
 .preview-title {
   text-align: center;
   font-weight: bold;
-  border-bottom: 1px solid black;
   margin: 4px 25%;
-  padding-bottom: 5px
+  padding-bottom: 5px;
 }
 
 .resume {
   font-family:'IBM Plex Sans';
-  width: 800px;
+  width: 90vw;
+  max-width: 800px;
   --style-color: rgb(231, 107, 36);
-  font-size: 20px;
+  font-size: 18px;
   box-shadow: 0px 3px 8px 4px #c7c3c3;
   height: 80vh;
   margin: 5px;
   overflow-y: auto;
-  max-height: 1024px;
+  max-height: 1150px;
   background-color: white;
 }
 
 /* General begin */
 .resume-section {
-  margin: 15px;
-  padding: 6px 0 24px 0;
+  margin: 0.75em;
+  padding: 0.2em 0 1.25em 0;
   display: flex;
   flex-direction: row;
 }
@@ -34,9 +34,9 @@
 }
 
 .resume-section .title {
-  padding: 0 5px;
+  padding: 0 0.25em;
   min-width: 128px;
-  font-size: 18px;
+  font-size: 90%;
   font-weight: 600;
 }
 
@@ -45,12 +45,12 @@
 }
 
 .resume-section .contents .item {
-  margin-bottom: 15px;
+  margin-bottom: 0.75em;
 }
 
 .title-icon {
   color: var(--style-color);
-  min-width: 28px;
+  min-width: 1.4em;
 }
 
 .header-title {
@@ -59,14 +59,14 @@
 
 .contents .item > *:not(.header) {
   font-size: 90%;
-  margin: 8px 0;
+  margin: .5em 0;
 }
 
 .resume .list .list-item {
   list-style-type: square;
   position: relative;
-  left: 15px;
-  margin: 15px;
+  left: 0.8em;
+  margin: 0.8em;
   font-size: 95%;
 }
 
@@ -74,14 +74,14 @@
 
 /* Personal Section Begin */
 .personal {
-  padding: 15px;
+  padding: 0.3em;
   text-align: center;
   background-color: var(--style-color);
   color: white;
 }
 
 .fullname {
-  font-size: 60px;
+  font-size: 300%;
   font-variant-caps: all-petite-caps;
   font-weight: 600;
   letter-spacing: 0.5mm;
@@ -94,7 +94,7 @@
 }
 
 .icon {
-  font-size: 12px;
+  font-size: 80%;
   margin: 0 5px;
   display: inline-block;
 }
@@ -136,6 +136,10 @@
 /* Education Resume End */
 
 /* Skills Section Begin */
+.review-section.section {
+
+}
+
 .skill-category {
   font-weight: bold;
 }
@@ -155,7 +159,7 @@
   margin: 10px 25px;
 }
 
-.skills-section {
+.preview .skills-section {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
