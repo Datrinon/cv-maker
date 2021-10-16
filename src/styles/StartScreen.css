@@ -1,0 +1,31 @@
+.start-screen {
+  align-items: center;
+  width: 100vw;
+  height: 80vh;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.start-screen .menu button {
+  display: block;
+  width: 256px;
+  margin: 15px 0;
+}
+
+.value-prop {
+  font-size: 280%;
+}
+
+.sample-image {
+  margin: 15px;
+  width: 300px;
+  box-shadow: 0px 4px 9px 3px #dfcdaa;
+}
+
+@media (max-width: 600px) {
+  .sample-image {
+    display: none;
+  }
+}

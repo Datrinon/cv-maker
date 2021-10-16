@@ -4,11 +4,13 @@ import '../styles/App.css';
 import { Component } from 'react';
 // components
 import Header from "./Header";
+import StartScreen from "./StartScreen";
 import ProgressBar from "./ProgressBar";
 import Form from "./Form";
 import PreviewPane from "./PreviewPane";
 import Navigation from "./Navigation";
 // models
+import PersonalInfo from '../models/personalInfo';
 import Education from '../models/education';
 import Experience from '../models/experience';
 import Skills from '../models/skills';
@@ -20,7 +22,7 @@ import _, { indexOf } from "lodash";
 /**
  * Mimics the state the app will maintain.
  */
- const DUMMY_STATE = {
+ const DEFAULT_STATE = {
   resume: {
     personal: {
       firstName: "Gerry",
@@ -30,7 +32,7 @@ import _, { indexOf } from "lodash";
       state: "Washington",
       zip: "83554",
       email: "gerry.haley@gmail.com",
-      phone: "9501432123"
+      phone: "5551432123"
     },
     education: [
       {
@@ -95,7 +97,6 @@ import _, { indexOf } from "lodash";
           "Python"
         ]
       },
-
     ]
   },
   get sections() { 
@@ -104,14 +105,19 @@ import _, { indexOf } from "lodash";
     return sections;
   },
   activeSection: "personal",
-  progress: "start"
+  progress: "start",
+  started: false,
+  usingDefault: false
 }
 
 class App extends Component {
+
+  static storageKey = "USER_RESUME";
+
   constructor(props) {
     super(props);
 
-    this.state = DUMMY_STATE;
+    this.state = DEFAULT_STATE;
 
     this.resumeOnChange = this.resumeOnChange.bind(this);
     this.resumeMultiSectionOnChange = this.resumeMultiSectionOnChange.bind(this);
@@ -123,7 +129,21 @@ class App extends Component {
         .bind(this);
     this.resumeMultiSectionListOnRemove = this.resumeMultiSectionListOnRemove
         .bind(this);
-    this.setActiveSection = this.setActiveSection.bind(this);                                        
+    this.setActiveSection = this.setActiveSection.bind(this);
+    
+    this.saveBeforeExit = this.saveBeforeExit.bind(this);
+
+    this.resetForm = this.resetForm.bind(this);
+
+    window.onbeforeunload = this.saveBeforeExit;
+  }
+
+  saveBeforeExit() {
+    if (!this.state.usingDefault) {
+      let resume = JSON.stringify(this.state.resume);
+
+      window.localStorage.setItem(App.storageKey, resume);
+    }
   }
 
   resumePrevSection() {
@@ -147,7 +167,6 @@ class App extends Component {
       let activeSection = state.sections[curIndex + 1];
 
       let progressUpdate = this.determineProgress(curIndex + 1, state.sections);
-      console.log({curIndex, activeSection});
 
       return {
         activeSection: activeSection,
@@ -175,12 +194,10 @@ class App extends Component {
       let field = event.target.name;
       let value = event.target.value;
       
-      console.log({field, value});
 
       let resume = _.cloneDeep(state.resume);
 
       resume[section][field] = value;
-      console.log(resume);
 
       return {resume: resume};
     });
@@ -194,7 +211,6 @@ class App extends Component {
       let resume = _.cloneDeep(state.resume);
 
       resume[section][index][field] = value;
-      console.log(resume);
 
       return {resume: resume};
     });
@@ -204,7 +220,6 @@ class App extends Component {
     this.setState((state) => {
       let field = event.target.name;
       let value = event.target.value;
-      console.log({section, subsectionIndex, bulletIndex, field, value});
 
       
       let resume = _.cloneDeep(state.resume);
@@ -311,41 +326,90 @@ class App extends Component {
     return current;
   }
 
-  // for debug purposes
-  // TODO, remove this when finished.
-  componentDidUpdate() {
-    console.log(this.state.activeSection);
-    console.log(this.state.progress);
+  startApp(ev) {
+    let state = ev.target.dataset.key;
+    switch(state) {
+      case "no-state":
+        // set state.
+        this.setState({
+          resume: {
+            personal: new PersonalInfo(),
+            education: [new Education()],
+            experience: [new Experience()],
+            skills: [new Skills()]
+          },
+          started: true,
+          usingDefault: false
+        });
+        break;
+      case "default-state":
+        // load dummy data.
+        // leave it be, just set started to true.
+        this.setState({
+          started: true,
+          usingDefault: true
+        });
+        break;
+      case "previous-state":
+        // load the previous data.
+        this.setState({
+          resume: JSON.parse(window.localStorage.getItem(App.storageKey)),
+          started: true,
+          usingDefault: false
+        })
+        break;
+      default:
+        break;
+      }
+  }
+
+  resetForm() {
+    this.setState({
+      resume: {
+        personal: new PersonalInfo(),
+        education: [new Education()],
+        experience: [new Experience()],
+        skills: [new Skills()]
+      }
+    });
   }
 
   render() {
     return (
       <div>
         <Header />
-        <section className="app-section">
-          <ProgressBar
-          activeSection={this.state.activeSection}
-          sections={this.state.sections}
-          jumpToSection={this.jumpToSection.bind(this)}
-          />
-          <Form
-            resume={this.state.resume}
-            onChange={this.resumeOnChange}
-            onMultiChange={this.resumeMultiSectionOnChange}
-            onMultiListChange={this.resumeMultiSectionListOnChange}
-            onMultiListAdd={this.resumeMultiSectionListOnAdd}
-            onMultiListRemove={this.resumeMultiSectionListOnRemove}
-            onSubsectionAdd={this.resumeOnSubsectionAdd}
-            onSubsectionRemove={this.resumeOnSubsectionRemove}
-            setActiveSection={this.setActiveSection}
-            activeSection={this.state.activeSection}
-          />
-          <Navigation progress={this.state.progress}
-            clickPrev={this.resumePrevSection.bind(this)}
-            clickNext={this.resumeNextSection.bind(this)}
-          />
-          <PreviewPane resume={this.state.resume}/>
-        </section>
+        <StartScreen 
+          storageKey={App.storageKey}
+          hasStarted={this.state.started}
+          start={this.startApp.bind(this)}/>
+        {this.state.started
+         && (<section className="app-section">
+              <ProgressBar
+              activeSection={this.state.activeSection}
+              sections={this.state.sections}
+              jumpToSection={this.jumpToSection.bind(this)}
+              />
+              <Form
+                resume={this.state.resume}
+                onChange={this.resumeOnChange}
+                onMultiChange={this.resumeMultiSectionOnChange}
+                onMultiListChange={this.resumeMultiSectionListOnChange}
+                onMultiListAdd={this.resumeMultiSectionListOnAdd}
+                onMultiListRemove={this.resumeMultiSectionListOnRemove}
+                onSubsectionAdd={this.resumeOnSubsectionAdd}
+                onSubsectionRemove={this.resumeOnSubsectionRemove}
+                setActiveSection={this.setActiveSection}
+                activeSection={this.state.activeSection}
+                usingDefault={this.state.usingDefault}
+                resetForm={this.resetForm}
+              />
+              <Navigation progress={this.state.progress}
+                clickPrev={this.resumePrevSection.bind(this)}
+                clickNext={this.resumeNextSection.bind(this)}
+              />
+              <PreviewPane resume={this.state.resume}/>
+          </section>)
+        }
       </div>
     );
   }
