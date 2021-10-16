@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope&display=swap');
 
 
+
 body {
   margin: 0;
   font-family: "Manrope";
@@ -28,6 +29,11 @@ code {
   padding: 5px 0;
   text-align: center;
   margin-top: 15px;
+}
+
+.footer a {
+  color: unset;
+  text-decoration: none;
 }
 
 button {
