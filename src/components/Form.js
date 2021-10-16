@@ -222,7 +222,7 @@ const PersonalSection = (props) => {
   }
 
   const inputs = [
-    { label: "First Name", type: "text", other: { placeholder: "Danny" } },
+    { label: "First Name", type: "text"},
     { label: "Last Name", type: "text" },
     { label: "Address", type: "text" },
     { label: "City", type: "text" },
@@ -293,7 +293,12 @@ function FinishSection(props) {
       <h2 className="caption">Ready to use your resume?</h2>
       <div className="controls">
         <button className="print" type="button" onClick={getPDF}>Save to PDF</button>
-        <button className="reset">Reset</button>
+        <button className="reset"
+          type="button"
+          disabled={props.usingDefault}
+          onClick={props.resetForm}>
+            Reset All Fields
+        </button>
       </div>
     </div>
   )
@@ -311,13 +316,13 @@ class Form extends Component {
     this.educationSection = {
       title: "education",
       template: [
-        { label: "Major", type: "text" },
         { label: "Degree", type: "text" },
-        { label: "GPA", type: "text" },
+        { label: "Major", type: "text" },
         { label: "School", type: "text" },
         { label: "Location", type: "text" },
-        { label: "To", type: "text" },
-        { label: "From", type: "text" }
+        { label: "GPA", type: "text" },
+        { label: "From", type: "text" },
+        { label: "To", type: "text" }
       ]
     }
 
@@ -327,8 +332,8 @@ class Form extends Component {
         { label: "Position", type: "text" },
         { label: "Company", type: "text" },
         { label: "Location", type: "text" },
-        { label: "To", type: "text" },
         { label: "From", type: "text" },
+        { label: "To", type: "text" },
         { label: "Responsibilities", type: "list" }
       ]
     }
@@ -347,7 +352,7 @@ class Form extends Component {
 
   render() {
     return (
-      <form className="form">
+      <div className="form">
         <PersonalSection
           data={this.props.resume.personal}
           section={"personal"}
@@ -430,8 +435,10 @@ class Form extends Component {
         <FinishSection
           activeSection={this.props.activeSection}
           section={"review"}
+          usingDefault={this.props.usingDefault}
+          resetForm={this.props.resetForm}
         />
-      </form>
+      </div>
     );
   }
 }
