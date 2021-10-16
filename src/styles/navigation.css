@@ -8,6 +8,7 @@
 
 .navigation button {
   width: 35%;
+  max-width: 250px;
   margin: 0 10px;
   border: 1px solid transparent;
   box-shadow: 0px 1px 2px 1px #b0a1a1;

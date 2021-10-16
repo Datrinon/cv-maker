@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
 
-.preview-title {
+.preview-title, .preview-note {
   text-align: center;
+}
+
+.preview-title {
   font-weight: bold;
   margin: 4px 25%;
   padding-bottom: 5px;
@@ -155,7 +158,7 @@
 
 .skill-item {
   list-style-type: square;
-  font-size: 90%;
+  font-size: 85%;
   margin: 10px 25px;
 }
 

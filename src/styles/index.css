@@ -8,7 +8,8 @@ body {
   font-family: "Manrope";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(253, 247, 234)
+  background-color: rgb(253, 247, 234);
+  font-size: 0.9rem;
 }
 
 input {
@@ -27,4 +28,14 @@ code {
   padding: 5px 0;
   text-align: center;
   margin-top: 15px;
+}
+
+button {
+  border: 1px solid transparent;
+  box-shadow: 0px 1px 2px 1px #b0a1a1;
+}
+
+button:disabled:hover {
+  background-color: white;
+  cursor: initial;
 }

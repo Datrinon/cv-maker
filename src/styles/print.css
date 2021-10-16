@@ -16,7 +16,6 @@
     height: fit-content;
     height: -moz-fit-content;
     max-height: initial;
-    width: fit-content;
-    width: -moz-fit-content;
+    width: 100vw;
   }
 }

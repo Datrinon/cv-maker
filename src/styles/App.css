@@ -6,7 +6,7 @@
   "navigation preview";
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1148px) {
   .app-section {
     grid-template-areas:
     "progress"
