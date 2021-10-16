@@ -16,19 +16,25 @@ class PreviewPane extends Component {
     return (
     <section className="preview">
       <h1 className="preview-title">Preview</h1>
+      <p className="preview-note">(PDF will be adjusted for letter-sized paper.)</p>
       <article id="section-to-print" className="resume">
         <section className="personal">
           <h1 className="fullname">{personal.firstName + " " + personal.lastName}</h1>
           <div className="contact-address">
             <p><i className="icon fas fa-envelope"></i>{personal.email}</p>
             <p><i className="icon fas fa-phone"></i>{personal.phone}</p>
-            <p className="address-line1"><i className="icon fas fa-map-marker-alt"></i>{personal.address} {personal.city}, {personal.state} {personal.zip}</p>
+            <p className="address-line1">
+              <i className="icon fas fa-map-marker-alt"></i>
+              {personal.address} {personal.city}
+              {(personal.state) && <span>, {personal.state} {personal.zip}</span>}
+            </p>
           </div>
         </section>
         <section className="education resume-section">
           <h1 className="title"><i className="title-icon fas fa-graduation-cap"></i>Education</h1>
           <div className="contents">
-          {education.map(degree => {
+          {
+            education.map(degree => {
             return (
               <div className="degree item" key={JSON.stringify(degree)}>
                 <div className="header">
@@ -37,7 +43,7 @@ class PreviewPane extends Component {
                 </div>
                 <p className="school-name">{degree.school}</p>
                 <p className="school-location">{degree.location}</p>
-                <p className="degree-gpa">GPA: {degree.gpa}</p>
+                <p className="degree-gpa">{degree.gpa && <span>GPA: {degree.gpa}</span>}</p>
               </div>
             );
           })}
@@ -56,8 +62,14 @@ class PreviewPane extends Component {
                   <p>{job.company}</p>
                   <p>{job.location}</p>
                   <ul className="responsibilities list">
-                  {job.responsibilities.map((note, index) => 
-                    <li key={index} className="list-item">{note}</li>)}
+                    {job.responsibilities.map((note, index) => {
+                      if (note !== "") {
+                        return (<li key={index} className="list-item">{note}</li>);
+                      } else {
+                        return "";
+                      }
+                    })
+                  }
                   </ul>
                 </div>
               );
@@ -72,8 +84,13 @@ class PreviewPane extends Component {
               <div className="skill" key={skillTree.category}>
                 <h2 className="skill-category">{skillTree.category}</h2>
                 <ul className="skills">
-                  {skillTree.skills.map((skill, index) =>
-                    <li key={index} className="skill-item">{skill}</li>)}
+                  {skillTree.skills.map((skill, index) => {
+                    if (skill !== "") {
+                      return (<li key={index} className="skill-item">{skill}</li>)
+                    } else {
+                      return "";
+                    }
+                  })}
                 </ul>
               </div>
               );
