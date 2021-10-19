@@ -1,7 +1,7 @@
 // css
 import '../styles/App.css';
 // react
-import { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 // components
 import Header from "./Header";
 import StartScreen from "./StartScreen";
@@ -15,14 +15,12 @@ import Education from '../models/education';
 import Experience from '../models/experience';
 import Skills from '../models/skills';
 
-
-import _, { indexOf } from "lodash";
-
+import { cloneDeep } from 'lodash';
 
 /**
- * Mimics the state the app will maintain.
+ * Is the default/initial state the app will maintain.
  */
- const DEFAULT_STATE = {
+const DEFAULT_STATE = {
   resume: {
     personal: {
       firstName: "Gerry",
@@ -99,7 +97,7 @@ import _, { indexOf } from "lodash";
       },
     ]
   },
-  get sections() { 
+  get sections() {
     let sections = Object.keys(this.resume);
     sections.push("review");
     return sections;
@@ -107,9 +105,319 @@ import _, { indexOf } from "lodash";
   activeSection: "personal",
   progress: "start",
   started: false,
-  usingDefault: false
+  usingSample: false
 }
 
+function App() {
+  // const [state, setState] = useState(DEFAULT_STATE);
+  const [resume, setResume] = useState(DEFAULT_STATE.resume);
+  const [sections, setSections] = useState(DEFAULT_STATE.sections);
+  const [activeSection, setActiveSection] = useState(DEFAULT_STATE.activeSection);
+  const [progress, setProgress] = useState(DEFAULT_STATE.progress);
+  const [started, setStarted] = useState(DEFAULT_STATE.started);
+  const [usingSample, setUsingSample] = useState(DEFAULT_STATE.usingSample);
+
+  const STORAGE_KEY = "USER_RESUME";
+
+  /**
+   * Saves the resume when the program is closed, as long as the user 
+   * isn't working with the default resume.
+   */
+  const saveBeforeExit = () => {
+    if (!usingSample) {
+      let resume = JSON.stringify(resume);
+
+      window.localStorage.setItem(STORAGE_KEY, resume);
+    }
+  }
+
+  function determineProgress(pos, sections) {
+    let current;
+    if (pos === 0) {
+      current = "start";
+    } else if (pos === sections.length - 2) {
+      current = "end";
+    } else if (pos === sections.length - 1) {
+      current = "review";
+    } else {
+      current = "mid";
+    }
+
+    return current;
+  }
+
+  /**
+   * Go to the previous section on the resume form.
+   */
+  const resumePrevSection = () => {
+    let curIndex = sections.indexOf(activeSection);
+    let newActiveSection = sections[curIndex - 1];
+
+    let progressUpdate = determineProgress(curIndex - 1, sections);
+
+    setActiveSection(newActiveSection);
+    setProgress(progressUpdate);
+  }
+
+  /**
+   * Go to the next section of the resume.
+   */
+  const resumeNextSection = () => {
+    let curIndex = sections.indexOf(activeSection);
+    let newActiveSection = sections[curIndex + 1];
+
+    let progressUpdate = determineProgress(curIndex + 1, sections);
+
+    setActiveSection(newActiveSection);
+    setProgress(progressUpdate);
+  }
+
+  /**
+   * Jump to a chosen section of the of the resume form.
+   * 
+   * @param {number} curIndex - The index to go to.
+   */
+  const jumpToSection = (curIndex) => {
+    let activeSection = sections[curIndex];
+    let currentProgress = determineProgress(curIndex, sections);
+
+    setActiveSection(activeSection);
+    setProgress(currentProgress);
+  }
+
+  /**
+   * Called when the a field on the resume form is changed.
+   * @param {string} section - The section which the field belogn sto.
+   * @param {Event} event - The event which triggered this callback (change of input field).
+   */
+  const resumeOnChange = (section, event) => {
+
+    let field = event.target.name;
+    let value = event.target.value;
+
+    let updatedResume = cloneDeep(resume);
+    updatedResume[section][field] = value;
+    // resume[section][field] = value;
+
+    setResume(updatedResume);
+  }
+
+  /**
+   * Called when the a field on the resume form in a section
+   * with multiple fields is changed.
+   * @param {string} section - The section which the field belogn sto.
+   * @param {Event} event - The event which triggered this callback (change of input field).
+   */
+  const resumeMultiSectionOnChange = (section, index, event) => {
+    let field = event.target.name;
+    let value = event.target.value;
+
+    let updatedResume = cloneDeep(resume);
+    updatedResume[section][index][field] = value;
+
+    setResume(updatedResume);
+  }
+
+  /**
+   * Called when a list input in a multi section of the form is changed.
+   * 
+   * @param {string} section - The section which this list input comes from.
+   * @param {number} subsectionIndex - The subsection of the section which the list belongs to.
+   * @param {number} bulletIndex - The bullet of this particular list.
+   * @param {Event} event 
+   */
+  const resumeMultiSectionListOnChange =
+    (section, subsectionIndex, bulletIndex, event) => {
+      let field = event.target.name;
+      let value = event.target.value;
+
+      let updatedResume = cloneDeep(resume);
+
+      updatedResume[section][subsectionIndex][field][bulletIndex] = value;
+
+      setResume(updatedResume);
+    }
+
+  /**
+   * Called when a list bullet in a multi section of the form is added.
+   * 
+   * @param {string} section - The section which this list input comes from.
+   * @param {number} subsectionIndex - The subsection of the section which the list belongs to.
+   * @param {Event} event 
+   */
+  const resumeMultiSectionListOnAdd =
+    (section, subsectionIndex, event) => {
+      let field = event.target.dataset.field;
+
+      let updatedResume = cloneDeep(resume);
+      updatedResume[section][subsectionIndex][field].push("");
+
+      setResume(updatedResume);
+    }
+
+  const resumeMultiSectionListOnRemove =
+    (section, subsectionIndex, event) => {
+      let field = event.target.dataset.field;
+
+      let updatedResume = cloneDeep(resume);
+      updatedResume[section][subsectionIndex][field].pop();
+
+      setResume(updatedResume);
+    }
+
+  /**
+   * Add a subsection to a certain section from the resume form.
+   * @param {string} section - The section which this subsection comes from.
+   */
+  const resumeOnSubsectionAdd = (section) => {
+    let updatedResume = cloneDeep(resume);
+    switch (section) {
+      case "education":
+        updatedResume.education.push(new Education());
+        break;
+      case "experience":
+        updatedResume.experience.push(new Experience());
+        break;
+      case "skills":
+        updatedResume.skills.push(new Skills());
+        break;
+      default:
+        console.log("Not implemented yet.")
+        break;
+    }
+
+    setResume(updatedResume);
+  }
+
+  /**
+   * Remove a subsection from the resume form.
+   * @param {string} section - The section which the subsection comes from.
+   * @param {number} index - The index of the element which the section belongs to.
+   */
+  const resumeOnSubsectionRemove = (section, index) => {
+    let updatedResume = cloneDeep(resume);
+
+    switch (section) {
+      case "education":
+        updatedResume.education.splice(index, 1);
+        break;
+      case "experience":
+        updatedResume.experience.splice(index, 1);
+        break;
+      case "skills":
+        updatedResume.skills.splice(index, 1);
+        break;
+      default:
+        console.log("Not implemented yet.");
+        break;
+    }
+
+    setResume(resume);
+  }
+
+  // TODO
+  // note this is the old setActiveSection
+  /**
+   * Mark a section as active. Called when the user presses one of the elements
+   * in the progress component.
+   * @param {string} section 
+   */
+  const markSectionAsActive = (section) => {
+    let pos = sections.indexOf(section);
+    let currentProgress = determineProgress(pos, sections);
+
+    setActiveSection(section);
+    setProgress(currentProgress);
+  }
+
+  /**
+   * Called when the app is started from the menu section.
+   * @param ev {event} - Event which is fired from clicking a start menu button.
+   */
+  function startApp(ev) {
+    let state = ev.target.dataset.key;
+    switch (state) {
+      case "no-state":
+        // set state.
+        setResume({
+          personal: new PersonalInfo(),
+          education: [new Education()],
+          experience: [new Experience()],
+          skills: [new Skills()]
+        });
+        setStarted(true);
+        setUsingSample(false);
+        break;
+      case "default-state":
+        setStarted(true);
+        setUsingSample(true);
+        break;
+      case "previous-state":
+        setResume(JSON.parse(window.localStorage.getItem(STORAGE_KEY)));
+        setStarted(true);
+        setUsingSample(false);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function resetForm() {
+    setResume({
+      personal: new PersonalInfo(),
+      education: [new Education()],
+      experience: [new Experience()],
+      skills: [new Skills()]
+    });
+  }
+
+  useEffect(() => {
+    return () => {
+      window.onbeforeunload = saveBeforeExit;
+    };
+  }, []);
+
+  return (
+    <React.Fragment>
+      <Header />
+      <StartScreen
+        storageKey={STORAGE_KEY}
+        hasStarted={started}
+        start={startApp} />
+      {started
+        && (<section className="app-section">
+          <ProgressBar
+            activeSection={activeSection}
+            sections={sections}
+            jumpToSection={jumpToSection}
+          />
+          <Form
+            resume={resume}
+            onChange={resumeOnChange}
+            onMultiChange={resumeMultiSectionOnChange}
+            onMultiListChange={resumeMultiSectionListOnChange}
+            onMultiListAdd={resumeMultiSectionListOnAdd}
+            onMultiListRemove={resumeMultiSectionListOnRemove}
+            onSubsectionAdd={resumeOnSubsectionAdd}
+            onSubsectionRemove={resumeOnSubsectionRemove}
+            setActiveSection={markSectionAsActive}
+            activeSection={activeSection}
+            usingDefault={usingSample}
+            resetForm={resetForm}
+          />
+          <Navigation progress={progress}
+            clickPrev={resumePrevSection}
+            clickNext={resumeNextSection}
+          />
+          <PreviewPane resume={resume} />
+        </section>)
+      }
+    </React.Fragment>
+  )
+}
+
+//#region 
+/*
 class App extends Component {
 
   static storageKey = "USER_RESUME";
@@ -124,13 +432,13 @@ class App extends Component {
     this.resumeOnSubsectionAdd = this.resumeOnSubsectionAdd.bind(this);
     this.resumeOnSubsectionRemove = this.resumeOnSubsectionRemove.bind(this);
     this.resumeMultiSectionListOnChange = this.resumeMultiSectionListOnChange
-        .bind(this);
+      .bind(this);
     this.resumeMultiSectionListOnAdd = this.resumeMultiSectionListOnAdd
-        .bind(this);
+      .bind(this);
     this.resumeMultiSectionListOnRemove = this.resumeMultiSectionListOnRemove
-        .bind(this);
+      .bind(this);
     this.setActiveSection = this.setActiveSection.bind(this);
-    
+
     this.saveBeforeExit = this.saveBeforeExit.bind(this);
 
     this.resetForm = this.resetForm.bind(this);
@@ -139,7 +447,7 @@ class App extends Component {
   }
 
   saveBeforeExit() {
-    if (!this.state.usingDefault) {
+    if (!this.state.usingSample) {
       let resume = JSON.stringify(this.state.resume);
 
       window.localStorage.setItem(App.storageKey, resume);
@@ -193,13 +501,13 @@ class App extends Component {
     this.setState((state) => {
       let field = event.target.name;
       let value = event.target.value;
-      
+
 
       let resume = _.cloneDeep(state.resume);
 
       resume[section][field] = value;
 
-      return {resume: resume};
+      return { resume: resume };
     });
   }
 
@@ -207,12 +515,12 @@ class App extends Component {
     this.setState((state) => {
       let field = event.target.name;
       let value = event.target.value;
-      
+
       let resume = _.cloneDeep(state.resume);
 
       resume[section][index][field] = value;
 
-      return {resume: resume};
+      return { resume: resume };
     });
   }
 
@@ -221,43 +529,43 @@ class App extends Component {
       let field = event.target.name;
       let value = event.target.value;
 
-      
+
       let resume = _.cloneDeep(state.resume);
 
       resume[section][subsectionIndex][field][bulletIndex] = value;
 
-      return {resume: resume};
+      return { resume: resume };
     });
   }
 
   resumeMultiSectionListOnAdd(section, subsectionIndex, event) {
     this.setState((state) => {
       let field = event.target.dataset.field;
-      
+
       let resume = _.cloneDeep(state.resume);
 
       resume[section][subsectionIndex][field].push("");
 
-      return {resume: resume};
+      return { resume: resume };
     });
   }
 
   resumeMultiSectionListOnRemove(section, subsectionIndex, event) {
     this.setState((state) => {
       let field = event.target.dataset.field;
-      
+
       let resume = _.cloneDeep(state.resume);
 
       resume[section][subsectionIndex][field].pop();
 
-      return {resume: resume};
+      return { resume: resume };
     });
   }
 
   resumeOnSubsectionAdd(section) {
     this.setState((state) => {
       let resume = _.cloneDeep(state.resume);
-      switch(section) {
+      switch (section) {
         case "education":
           resume.education.push(new Education());
           break;
@@ -272,14 +580,14 @@ class App extends Component {
           break;
       }
 
-      return {resume: resume};
+      return { resume: resume };
     });
   }
 
   resumeOnSubsectionRemove(section, index) {
     this.setState((state) => {
       let resume = _.cloneDeep(state.resume);
-      switch(section) {
+      switch (section) {
         case "education":
           resume.education.splice(index, 1);
           break;
@@ -294,7 +602,7 @@ class App extends Component {
           break;
       }
 
-      return {resume: resume};
+      return { resume: resume };
     });
   }
 
@@ -308,16 +616,16 @@ class App extends Component {
         activeSection: section,
         currentProgress: currentProgress
       };
-    });    
+    });
   }
 
   determineProgress(pos, sections) {
     let current;
     if (pos === 0) {
       current = "start";
-    } else if (pos === sections.length-2) {
+    } else if (pos === sections.length - 2) {
       current = "end";
-    } else if (pos === sections.length-1) {
+    } else if (pos === sections.length - 1) {
       current = "review";
     } else {
       current = "mid";
@@ -328,7 +636,7 @@ class App extends Component {
 
   startApp(ev) {
     let state = ev.target.dataset.key;
-    switch(state) {
+    switch (state) {
       case "no-state":
         // set state.
         this.setState({
@@ -360,7 +668,7 @@ class App extends Component {
         break;
       default:
         break;
-      }
+    }
   }
 
   resetForm() {
@@ -378,44 +686,44 @@ class App extends Component {
     return (
       <div>
         <Header />
-        <StartScreen 
+        <StartScreen
           storageKey={App.storageKey}
           hasStarted={this.state.started}
-          start={this.startApp.bind(this)}/>
+          start={this.startApp.bind(this)} />
         {this.state.started
-         && (<section className="app-section">
-              <ProgressBar
+          && (<section className="app-section">
+            <ProgressBar
               activeSection={this.state.activeSection}
               sections={this.state.sections}
               jumpToSection={this.jumpToSection.bind(this)}
-              />
-              <Form
-                resume={this.state.resume}
-                onChange={this.resumeOnChange}
-                onMultiChange={this.resumeMultiSectionOnChange}
-                onMultiListChange={this.resumeMultiSectionListOnChange}
-                onMultiListAdd={this.resumeMultiSectionListOnAdd}
-                onMultiListRemove={this.resumeMultiSectionListOnRemove}
-                onSubsectionAdd={this.resumeOnSubsectionAdd}
-                onSubsectionRemove={this.resumeOnSubsectionRemove}
-                setActiveSection={this.setActiveSection}
-                activeSection={this.state.activeSection}
-                usingDefault={this.state.usingDefault}
-                resetForm={this.resetForm}
-              />
-              <Navigation progress={this.state.progress}
-                clickPrev={this.resumePrevSection.bind(this)}
-                clickNext={this.resumeNextSection.bind(this)}
-              />
-              <PreviewPane resume={this.state.resume}/>
+            />
+            <Form
+              resume={this.state.resume}
+              onChange={this.resumeOnChange}
+              onMultiChange={this.resumeMultiSectionOnChange}
+              onMultiListChange={this.resumeMultiSectionListOnChange}
+              onMultiListAdd={this.resumeMultiSectionListOnAdd}
+              onMultiListRemove={this.resumeMultiSectionListOnRemove}
+              onSubsectionAdd={this.resumeOnSubsectionAdd}
+              onSubsectionRemove={this.resumeOnSubsectionRemove}
+              setActiveSection={this.setActiveSection}
+              activeSection={this.state.activeSection}
+              usingDefault={this.state.usingSample}
+              resetForm={this.resetForm}
+            />
+            <Navigation progress={this.state.progress}
+              clickPrev={this.resumePrevSection.bind(this)}
+              clickNext={this.resumeNextSection.bind(this)}
+            />
+            <PreviewPane resume={this.state.resume} />
           </section>)
         }
       </div>
     );
   }
 }
-
-
+*/
+//#endregion
 
 export default App;
 
