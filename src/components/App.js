@@ -1,7 +1,7 @@
 // css
 import '../styles/App.css';
 // react
-import React, { Component, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 // components
 import Header from "./Header";
 import StartScreen from "./StartScreen";
@@ -125,9 +125,9 @@ function App() {
    */
   const saveBeforeExit = () => {
     if (!usingSample) {
-      let resume = JSON.stringify(resume);
+      let save = JSON.stringify(resume);
 
-      window.localStorage.setItem(STORAGE_KEY, resume);
+      window.localStorage.setItem(STORAGE_KEY, save);
     }
   }
 
@@ -371,11 +371,7 @@ function App() {
     });
   }
 
-  useEffect(() => {
-    return () => {
-      window.onbeforeunload = saveBeforeExit;
-    };
-  }, []);
+  window.onbeforeunload = saveBeforeExit;
 
   return (
     <React.Fragment>
